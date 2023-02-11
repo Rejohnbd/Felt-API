@@ -11,22 +11,47 @@ class AuthController extends Controller
 {
     public function login(Request $request)
     {
-        if (!Auth::attempt($request->only(['email', 'password']))) {
-            throw new AuthenticationException();
-        } else {
-            $user = Auth::user();
+        // return $request->all();
+        $validator = validator(
+            $request->all(),
+            [
+                'email'     => 'required|email|max:255',
+                'password'  => 'required|string|max:255'
+            ],
+            [
+                'email.required'    => 'Email is Required',
+                'email.email'       => 'Provide Valid Email',
+                'email.max'         => 'Provide Valid Email',
+                'password.required' => 'Password is Required',
+                'password.string'   => 'Provide Valid Password',
+                'password.max'      => 'Provide Valid Password',
+            ]
+        );
+
+        if ($validator->fails()) {
             return response()->json([
-                'status'        => 200,
-                'message'       => 'Logged in successfully',
-                'user'          => Auth::user(),
-                'access_token'  => $user->createToken($user->email)->plainTextToken
+                'status'    => 400,
+                'message'   => $validator->getMessageBag()->first(),
+                'errors'    => $validator->getMessageBag()
             ]);
+        } else {
+            if (Auth::attempt($request->only(['email', 'password']))) {
+                $user = Auth::user()->load(['userRole']);
+                return response()->json([
+                    'status'        => 200,
+                    'message'       => 'Logged in successfully',
+                    'user'          => Auth::user(),
+                    'access_token'  => $user->createToken($user->email)->plainTextToken
+                ]);
+            } else {
+                throw new AuthenticationException();
+            }
         }
     }
 
     public function user()
     {
-        return Auth::user();
+        return Auth::user()->load(['userRole']);
         // $accessToken = $user->createToken($user->name)->plainTextToken;
         // return response()->json([
         //     'status'        => 200,
