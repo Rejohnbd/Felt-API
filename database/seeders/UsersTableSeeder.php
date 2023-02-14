@@ -17,21 +17,39 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
         User::create([
-            'name'      => 'Admin',
-            'role_id'   => 2,
-            'email'     => 'admin@mail.com',
-            'password'  => Hash::make('password'),
-            'user_status'  => 1,
-            'created_by' => 'Admin'
+            'name'          => 'Admin',
+            'role_id'       => 2,
+            'email'         => 'admin@mail.com',
+            'password'      => Hash::make('password'),
+            'user_status'   => 1,
+            'created_by'    => 'Admin'
         ]);
 
         User::create([
-            'name'      => 'Customer',
-            'role_id'   => 3,
-            'email'     => 'customer@mail.com',
-            'password'  => Hash::make('password'),
-            'user_status'  => 1,
-            'created_by' => 'Admin'
+            'name'          => 'Employee',
+            'role_id'       => 3,
+            'email'         => 'employee@mail.com',
+            'password'      => Hash::make('password'),
+            'user_status'   => 1,
+            'created_by'    => 'Admin'
+        ]);
+
+        User::create([
+            'name'          => 'Customer',
+            'role_id'       => 4,
+            'email'         => 'customer@mail.com',
+            'password'      => Hash::make('password'),
+            'user_status'   => 1,
+            'created_by'    => 'Admin'
+        ]);
+
+        User::create([
+            'name'          => 'Driver',
+            'role_id'       => 5,
+            'email'         => 'driver@mail.com',
+            'password'      => Hash::make('password'),
+            'user_status'   => 1,
+            'created_by'    => 'Admin'
         ]);
     }
 }

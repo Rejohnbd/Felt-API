@@ -19,22 +19,26 @@ class UserRolesTableSeeder extends Seeder
         UserRole::create([
             'name'          => 'Anonymous',
             'slug'          => Str::slug('Anonymous'),
-            'created_at'    => date('Y-m-d H:i:s'),
-            'updated_at'    => date('Y-m-d H:i:s')
         ]);
 
         UserRole::create([
             'name'          => 'Admin',
-            'slug'          => Str::slug('Admin'),
-            'created_at'    => date('Y-m-d H:i:s'),
-            'updated_at'    => date('Y-m-d H:i:s')
+            'slug'          => Str::slug('Admin')
+        ]);
+
+        UserRole::create([
+            'name'          => 'Employee',
+            'slug'          => Str::slug('Employee')
         ]);
 
         UserRole::create([
             'name'          => 'Customer',
-            'slug'          => Str::slug('Customer'),
-            'created_at'    => date('Y-m-d H:i:s'),
-            'updated_at'    => date('Y-m-d H:i:s')
+            'slug'          => Str::slug('Customer')
+        ]);
+
+        UserRole::create([
+            'name'          => 'Driver',
+            'slug'          => Str::slug('Driver')
         ]);
     }
 }
