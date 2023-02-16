@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -70,5 +71,10 @@ class AuthController extends Controller
         //     'status'        => 200,
         //     'message'       => 'Logout Successfully'
         // ]);
+    }
+
+    public function allUsers()
+    {
+        return User::with(['userRole', 'userDetails'])->get();
     }
 }
