@@ -36,7 +36,7 @@ class AuthController extends Controller
             ]);
         } else {
             if (Auth::attempt($request->only(['email', 'password']))) {
-                $user = Auth::user()->load(['userRole']);
+                $user = Auth::user()->load(['userRole', 'userDetails']);
                 return response()->json([
                     'status'        => 200,
                     'message'       => 'Logged in successfully',
@@ -51,7 +51,7 @@ class AuthController extends Controller
 
     public function user()
     {
-        return Auth::user()->load(['userRole']);
+        return Auth::user()->load(['userRole', 'userDetails']);
         // $accessToken = $user->createToken($user->name)->plainTextToken;
         // return response()->json([
         //     'status'        => 200,
