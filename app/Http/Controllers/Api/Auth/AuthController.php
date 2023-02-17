@@ -73,8 +73,17 @@ class AuthController extends Controller
         // ]);
     }
 
-    public function allUsers()
+    public function allUsers(Request $request)
     {
-        return User::with(['userRole', 'userDetails'])->get();
+        if (env('API_SECRET_KEY') == $request->header('api_secret_key')) {
+            return 'ok';
+            // return User::with(['userRole', 'userDetails'])->get();
+        } else {
+            return response()->json([
+                'status'    => 400,
+                'message'   => "not match",
+            ]);
+            // dd(env('API_SECRET_KEY'), $request->header('ap_secret_key'));
+        }
     }
 }
