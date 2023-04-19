@@ -139,7 +139,7 @@ class AuthController extends Controller
         } else {
             return response()->json([
                 'status'    => 400,
-                'message'   => "not match",
+                'message'   => "it is ok check api",
             ]);
             // dd(env('API_SECRET_KEY'), $request->header('ap_secret_key'));
         }

@@ -22,7 +22,7 @@ Route::post('login', [AuthController::class, 'login']);
 Route::post('logout', [AuthController::class, 'logout']);
 
 Route::get('migrate/{key}', function ($key) {
-    if ($key == 'Rejohn@333') {
+    if ($key == 'Rejohn@1234') {
         try {
             \Artisan::call('migrate');
             echo 'Migrated Successfully!';

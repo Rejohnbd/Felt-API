@@ -13,6 +13,67 @@
         "version": "1.0.0"
     },
     "paths": {
+        "/api/device-types": {
+            "get": {
+                "tags": [
+                    "getAllDeviceTypes"
+                ],
+                "summary": "Returns all device type",
+                "description": "",
+                "operationId": "getAllDeviceTypes",
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": {
+                                        "type": "integer",
+                                        "format": "int32"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "addDeviceType"
+                ],
+                "summary": "Add a new pet to the store.",
+                "operationId": "addDeviceType",
+                "parameters": [
+                    {
+                        "name": "device_type_name",
+                        "in": "path",
+                        "description": "Device Type Name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "device_configure_text",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Invalid input"
+                    }
+                }
+            }
+        },
         "/login": {
             "post": {
                 "tags": [
