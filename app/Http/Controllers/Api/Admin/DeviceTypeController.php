@@ -85,6 +85,7 @@ class DeviceTypeController extends Controller
      */
     public function store(Request $request): Response
     {
+
         $request->request->add(['device_type_slug' => Str::slug($request->device_type_name)]);
         $validator = validator(
             $request->all(),
