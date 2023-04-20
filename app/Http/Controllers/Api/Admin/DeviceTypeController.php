@@ -85,7 +85,6 @@ class DeviceTypeController extends Controller
      */
     public function store(Request $request): Response
     {
-
         $request->request->add(['device_type_slug' => Str::slug($request->device_type_name)]);
         $validator = validator(
             $request->all(),
@@ -128,7 +127,20 @@ class DeviceTypeController extends Controller
      */
     public function show(string $id): Response
     {
-        //
+        $deviceInfo = DeviceType::find($id);
+        if (!is_null($deviceInfo)) :
+            return Response([
+                'status' => true,
+                'message' => 'Device Type Info.',
+                'data' => $deviceInfo
+            ], Response::HTTP_OK);
+        else :
+            return Response([
+                'status' => false,
+                'message' => 'Device Type Not Found.',
+                'data' => $deviceInfo
+            ], Response::HTTP_NOT_FOUND);
+        endif;
     }
 
     /**
@@ -142,9 +154,52 @@ class DeviceTypeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id): RedirectResponse
+    public function update(Request $request, string $id): Response
     {
-        //
+        $deviceInfo = DeviceType::find($id);
+        if (!is_null($deviceInfo)) :
+            $request->request->add(['device_type_slug' => Str::slug($request->device_type_name)]);
+            $validator = validator(
+                $request->all(),
+                [
+                    'device_type_name'      => 'required|string',
+                    'device_type_slug'      => 'required|string|unique:device_types,device_type_slug,' . $deviceInfo->id,
+                    'device_configure_text' => 'required|string'
+                ],
+                [
+                    'device_type_name.required'         => 'Device Type Name is Required',
+                    'device_type_name.string'           => 'Provide Valid Device Type Name',
+                    'device_type_slug.unique'           => 'This Device Type Already Exist',
+                    'device_configure_text.required'    => 'This Device Configuration Text is Required.',
+                    'device_configure_text.string'      => 'Provide Valid Device Configuration Text.',
+                ]
+            );
+            if ($validator->fails()) :
+                return Response([
+                    'status' => false,
+                    'message' => $validator->getMessageBag()->first(),
+                    'errors' => $validator->getMessageBag()
+                ], Response::HTTP_BAD_REQUEST);
+            else :
+                $deviceInfo->device_type_name        = $request->device_type_name;
+                $deviceInfo->device_type_slug        = $request->device_type_slug;
+                $deviceInfo->device_configure_text   = $request->device_configure_text;
+                $deviceInfo->save();
+
+                return Response([
+                    'status' => true,
+                    'message' => 'Device Type Updated Successfully.',
+                    'data' => $deviceInfo
+                ], Response::HTTP_CREATED);
+
+            endif;
+        else :
+            return Response([
+                'status' => false,
+                'message' => 'Device Type Not Found.',
+                'data' => $deviceInfo
+            ], Response::HTTP_NOT_FOUND);
+        endif;
     }
 
     /**
