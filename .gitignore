@@ -4,6 +4,7 @@
 /public/storage
 /storage/*.key
 /vendor
+/public/vehicle_type_image/*
 # .env
 # .env.backup
 # .env.production
