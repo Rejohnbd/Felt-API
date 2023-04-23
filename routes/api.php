@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Admin\DeviceTypeController;
+use App\Http\Controllers\Api\Admin\VehicleTypeController;
 use App\Http\Controllers\Api\Auth\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -22,5 +23,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('admin')->middleware('admin')->group(function () {
         Route::get('all-users', [AuthController::class, 'allUsers']);
         Route::apiResource('device-types', DeviceTypeController::class);
+        Route::apiResource('vehicle-types', VehicleTypeController::class);
     });
 });

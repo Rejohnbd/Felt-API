@@ -13,7 +13,7 @@
         "version": "1.0.0"
     },
     "paths": {
-        "/api/device-types": {
+        "/api/admin/device-types": {
             "get": {
                 "tags": [
                     "getAllDeviceTypes"
@@ -46,7 +46,6 @@
                 "tags": [
                     "addDeviceType"
                 ],
-                "summary": "Add a new pet to the store.",
                 "operationId": "addDeviceType",
                 "parameters": [
                     {
@@ -64,6 +63,66 @@
                         "required": true,
                         "schema": {
                             "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Invalid input"
+                    }
+                }
+            }
+        },
+        "/api/admin/vehicle-types": {
+            "get": {
+                "tags": [
+                    "getAllVehicleTypes"
+                ],
+                "summary": "Returns all vehicle type",
+                "description": "",
+                "operationId": "getAllVehicleTypes",
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": {
+                                        "type": "integer",
+                                        "format": "int32"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "addVehicleTypes"
+                ],
+                "operationId": "addVehicleTypes",
+                "parameters": [
+                    {
+                        "name": "vehicle_type_name",
+                        "in": "path",
+                        "description": "Vehicle Type Name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "vehicle_type_image",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "file"
                         }
                     }
                 ],

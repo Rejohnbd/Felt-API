@@ -16,7 +16,7 @@ class DeviceTypeController extends Controller
      */
     /**
      * @OA\Get(
-     *     path="/api/device-types",
+     *     path="/api/admin/device-types",
      *     tags={"getAllDeviceTypes"},
      *     summary="Returns all device type",
      *     description="",
@@ -54,10 +54,8 @@ class DeviceTypeController extends Controller
      * Store a newly created resource in storage.
      */
     /**
-     * Add a new pet to the store.
-     *
      * @OA\Post(
-     *     path="/api/device-types",
+     *     path="/api/admin/device-types",
      *     tags={"addDeviceType"},
      *     operationId="addDeviceType",
      *     @OA\Parameter(
