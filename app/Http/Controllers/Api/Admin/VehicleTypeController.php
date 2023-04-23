@@ -39,7 +39,11 @@ class VehicleTypeController extends Controller
     public function index(): Response
     {
         $data = VehicleType::all();
-        return Response(['status' => true, 'message' => 'All Vehicle Type', 'data' => $data], Response::HTTP_OK);
+        return Response([
+            'status'    => true,
+            'message'   => 'All Vehicle Type',
+            'data'      => $data
+        ], Response::HTTP_OK);
     }
 
     /**
@@ -101,15 +105,15 @@ class VehicleTypeController extends Controller
         );
         if ($validator->fails()) :
             return Response([
-                'status' => false,
-                'message' => $validator->getMessageBag()->first(),
-                'errors' => $validator->getMessageBag()
+                'status'    => false,
+                'message'   => $validator->getMessageBag()->first(),
+                'errors'    => $validator->getMessageBag()
             ], Response::HTTP_BAD_REQUEST);
         else :
             $newVehicleType = new VehicleType;
             $file = $request->file('vehicle_type_image');
             $fileExtension = $request->vehicle_type_image->extension();
-            $fileName = $request->vehicle_type_slug . "_" . Str::random(5) . "_" . date('his') . $fileExtension;
+            $fileName = $request->vehicle_type_slug . "_" . Str::random(5) . "_" . date('his') . '.' . $fileExtension;
             $folderpath = public_path() . '/vehicle_type_image';
             $file->move($folderpath, $fileName);
 
@@ -131,7 +135,20 @@ class VehicleTypeController extends Controller
      */
     public function show(string $id): Response
     {
-        //
+        $vehicleInfo = VehicleType::find($id);
+        if (!is_null($vehicleInfo)) :
+            return Response([
+                'status' => true,
+                'message' => 'Vechile Type Info.',
+                'data' => $vehicleInfo
+            ], Response::HTTP_OK);
+        else :
+            return Response([
+                'status' => false,
+                'message' => 'Vechile Type Not Found.',
+                'data' => $vehicleInfo
+            ], Response::HTTP_NOT_FOUND);
+        endif;
     }
 
     /**
@@ -145,9 +162,68 @@ class VehicleTypeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id): RedirectResponse
+    public function update(Request $request, string $id): Response
     {
-        //
+        // return Response(['data' => $request->all(), 'id' => $id]);
+        $vehicleInfo = VehicleType::find($id);
+        if (!is_null($vehicleInfo)) :
+            $request->request->add(['vehicle_type_slug' => Str::slug($request->vehicle_type_name)]);
+            $validator = validator(
+                $request->all(),
+                [
+                    'vehicle_type_name'     => 'required|string',
+                    'vehicle_type_slug'     => 'required|string|unique:vehicle_types,vehicle_type_slug,' . $vehicleInfo->id,
+                    'vehicle_type_image'    => $request->hasFile('vehicle_type_image') ? 'required|mimes:png' : 'nullable'
+                ],
+                [
+                    'vehicle_type_name.required'    => 'Vehicle Type Name is Required',
+                    'vehicle_type_name.string'      => 'Provide Valid Vehicle Type Name',
+                    'vehicle_type_slug.unique'      => 'This Vehicle Type Already Exist',
+                    'vehicle_type_image.required'   => 'Vehicle Type Image is Required.',
+                    'vehicle_type_image.mimes'      => 'Only PNG format Image Accepted.',
+                ]
+            );
+            if ($validator->fails()) :
+                return Response([
+                    'status' => false,
+                    'message' => $validator->getMessageBag()->first(),
+                    'errors' => $validator->getMessageBag()
+                ], Response::HTTP_BAD_REQUEST);
+            else :
+
+                if ($request->hasFile('vehicle_type_image')) :
+                    $image_path = public_path($vehicleInfo->vehicle_type_image);
+                    if (file_exists($image_path)) {
+                        unlink($image_path);
+                    }
+
+                    $file = $request->file('vehicle_type_image');
+                    $fileExtension = $request->vehicle_type_image->extension();
+                    $fileName = $request->vehicle_type_slug . "_" . Str::random(5) . "_" . date('his') . '.' . $fileExtension;
+                    $folderpath = public_path() . '/vehicle_type_image';
+                    $file->move($folderpath, $fileName);
+
+                    $vehicleInfo->vehicle_type_image = '/vehicle_type_image/' . $fileName;
+                endif;
+
+                $vehicleInfo->vehicle_type_name  = $request->vehicle_type_name;
+                $vehicleInfo->vehicle_type_slug  = $request->vehicle_type_slug;
+                $vehicleInfo->save();
+
+                return Response([
+                    'status'    => true,
+                    'message'   => 'Vehicle Type Updated Successfully.',
+                    'data'      => $vehicleInfo
+                ], Response::HTTP_CREATED);
+
+            endif;
+        else :
+            return Response([
+                'status'    => false,
+                'message'   => 'Vehicle Type Not Found.',
+                'data'      => $vehicleInfo
+            ], Response::HTTP_NOT_FOUND);
+        endif;
     }
 
     /**
