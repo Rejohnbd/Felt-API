@@ -73,6 +73,90 @@
                 }
             }
         },
+        "/api/admin/service-packages": {
+            "get": {
+                "tags": [
+                    "getAllPackages"
+                ],
+                "summary": "Returns all device type",
+                "description": "",
+                "operationId": "getAllPackages",
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": {
+                                        "type": "integer",
+                                        "format": "int32"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "createPackage"
+                ],
+                "operationId": "createPackage",
+                "parameters": [
+                    {
+                        "name": "package_name",
+                        "in": "path",
+                        "description": "Package Name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "installation_charge",
+                        "in": "query",
+                        "description": "Installation Charge",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "subscription_fee",
+                        "in": "query",
+                        "description": "Subcription Fee",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "package_features",
+                        "in": "query",
+                        "description": "Package Features",
+                        "required": false,
+                        "schema": {
+                            "type": "array['value']"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Invalid input"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer token": []
+                    }
+                ]
+            }
+        },
         "/api/admin/vehicle-types": {
             "get": {
                 "tags": [
