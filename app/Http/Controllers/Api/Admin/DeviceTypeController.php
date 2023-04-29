@@ -38,7 +38,7 @@ class DeviceTypeController extends Controller
      */
     public function index(): Response
     {
-        $data = DeviceType::all();
+        $data = DeviceType::with('devices')->get();
         return Response(['status' => true, 'message' => 'All Device Type', 'data' => $data], Response::HTTP_OK);
     }
 

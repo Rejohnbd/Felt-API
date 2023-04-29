@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class DeviceType extends Model
+class Device extends Model
 {
     use HasFactory;
 
@@ -14,8 +14,8 @@ class DeviceType extends Model
         'updated_at',
     ];
 
-    function devices()
+    function deviceType()
     {
-        return $this->hasMany(Device::class);
+        return $this->hasOne(DeviceType::class, 'id', 'device_type_id');
     }
 }

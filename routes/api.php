@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\DeviceController;
 use App\Http\Controllers\Api\Admin\DeviceTypeController;
 use App\Http\Controllers\Api\Admin\ServicePackageController;
 use App\Http\Controllers\Api\Admin\VehicleTypeController;
@@ -26,5 +27,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('device-types', DeviceTypeController::class);
         Route::apiResource('vehicle-types', VehicleTypeController::class);
         Route::apiResource('service-packages', ServicePackageController::class);
+        Route::apiResource('devices', DeviceController::class);
     });
 });
