@@ -21,7 +21,7 @@ class UsersTableSeeder extends Seeder
             'email'         => 'admin@mail.com',
             'password'      => Hash::make('password'),
             'user_status'   => 1,
-            'created_by'    => 'Admin'
+            'created_by'    => 1
         ]);
 
         User::create([
@@ -29,7 +29,7 @@ class UsersTableSeeder extends Seeder
             'email'         => 'employee@mail.com',
             'password'      => Hash::make('password'),
             'user_status'   => 1,
-            'created_by'    => 'Admin'
+            'created_by'    => 1
         ]);
 
         User::create([
@@ -37,7 +37,7 @@ class UsersTableSeeder extends Seeder
             'email'         => 'customer@mail.com',
             'password'      => Hash::make('password'),
             'user_status'   => 1,
-            'created_by'    => 'Admin'
+            'created_by'    => 1
         ]);
 
         User::create([
@@ -45,7 +45,7 @@ class UsersTableSeeder extends Seeder
             'email'         => 'driver@mail.com',
             'password'      => Hash::make('password'),
             'user_status'   => 1,
-            'created_by'    => 'Admin'
+            'created_by'    => 1
         ]);
     }
 }

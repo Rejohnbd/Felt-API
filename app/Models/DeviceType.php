@@ -13,4 +13,9 @@ class DeviceType extends Model
         'created_at',
         'updated_at',
     ];
+
+    function devices()
+    {
+        return $this->hasMany(Device::class);
+    }
 }

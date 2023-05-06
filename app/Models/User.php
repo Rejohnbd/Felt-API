@@ -29,7 +29,6 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
-        'id',
         'role_id',
         'password',
         'remember_token',
@@ -60,5 +59,12 @@ class User extends Authenticatable
     public function userDetails()
     {
         return $this->hasOne(UserDetails::class, 'user_id', 'id');
+    }
+
+    public function createdByUser()
+    {
+        return $this->belongsTo(User::class, 'created_by', 'id')
+            ->with('userDetails:user_id,id,first_name,last_name')
+            ->select('id', 'email');
     }
 }

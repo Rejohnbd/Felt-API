@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class UserRole extends Model
+class Device extends Model
 {
     use HasFactory;
 
@@ -14,8 +14,8 @@ class UserRole extends Model
         'updated_at',
     ];
 
-    public function users()
+    function deviceType()
     {
-        return $this->hasMany(User::class);
+        return $this->hasOne(DeviceType::class, 'id', 'device_type_id');
     }
 }
