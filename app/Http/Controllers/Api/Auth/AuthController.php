@@ -7,6 +7,8 @@ use App\Models\User;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
@@ -122,13 +124,16 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
+        $user = $request->user();
+        $user->tokens()->delete();
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        // return response()->json([
-        //     'status'        => 200,
-        //     'message'       => 'Logout Successfully'
-        // ]);
+        return response()->json([
+            'status'        => 200,
+            'message'       => 'Logout Successfully',
+            'user'          => $user
+        ]);
     }
 
     public function allUsers(Request $request)
@@ -143,5 +148,40 @@ class AuthController extends Controller
             ]);
             // dd(env('API_SECRET_KEY'), $request->header('ap_secret_key'));
         }
+    }
+
+    public function sanctumAuth(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            throw ValidationException::withMessages([
+                'email' => ['The provided credentials are incorrect.'],
+            ]);
+        }
+        // $user->load(['userRole', 'userDetails']);
+
+        // return response()->json([
+        //     'status'    => true,
+        //     'user'      => $user,
+        //     'token'     => $user->createToken($request->email)->plainTextToken
+        // ]);
+        $user->createToken($request->email)->plainTextToken;
+    }
+
+    public function sanctumRevoke(Request $request)
+    {
+        // Need To Test Here
+        // $user = Auth::user();
+        // return response()->json(['status' => 'Rejohn', 'user' => $user]);
+        $user = $request->user();
+        $user->tokens()->delete();
+        // $user->tokens()->where('id', $tokenId)->delete();
+        return 'Delete Token';
     }
 }
