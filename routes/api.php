@@ -36,6 +36,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('devices', DeviceController::class);
         Route::apiResource('user-roles', UserRoleController::class);
         Route::apiResource('users', UserController::class);
+        Route::post('users-update', [UserController::class, 'update']);
         Route::get('customer-users', [UserController::class, 'customerUsers']);
     });
 });

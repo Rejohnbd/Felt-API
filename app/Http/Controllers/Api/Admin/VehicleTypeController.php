@@ -164,7 +164,6 @@ class VehicleTypeController extends Controller
      */
     public function update(Request $request, string $id): Response
     {
-        // return Response(['data' => $request->all(), 'id' => $id]);
         $vehicleInfo = VehicleType::find($id);
         if (!is_null($vehicleInfo)) :
             $request->request->add(['vehicle_type_slug' => Str::slug($request->vehicle_type_name)]);

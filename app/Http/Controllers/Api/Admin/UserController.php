@@ -120,6 +120,7 @@ class UserController extends Controller
                 $newUserDetails->email_optional = $request->email_optional;
                 $newUserDetails->phone_number   = $request->phone_number;
                 $newUserDetails->phone_optional = $request->phone_optional;
+                $newUserDetails->address        = $request->address;
                 $newUserDetails->reference      = $request->reference;
                 $newUserDetails->notes          = $request->notes;
 
@@ -157,7 +158,20 @@ class UserController extends Controller
      */
     public function show(string $id): Response
     {
-        //
+        $userInfo = User::with(['userRole', 'userDetails'])->find($id);
+        if (!is_null($userInfo)) :
+            return Response([
+                'status'    => true,
+                'message'   => 'User Info.',
+                'data'      => $userInfo
+            ], Response::HTTP_OK);
+        else :
+            return Response([
+                'status'    => false,
+                'message'   => 'User Not Found.',
+                'data'      => $userInfo
+            ], Response::HTTP_NOT_FOUND);
+        endif;
     }
 
     /**
@@ -171,9 +185,144 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id): RedirectResponse
+    public function update(Request $request): Response
     {
-        //
+        // return Response([
+        //     'status'    => true,
+        //     'message'   => 'User Created Successfully',
+        //     'data'      => $request->all()
+        // ], Response::HTTP_CREATED);
+        $userInfo = User::with(['userRole', 'userDetails'])->find($request->id);
+        if (!is_null($userInfo)) :
+            $validator = validator(
+                $request->all(),
+                [
+                    'first_name'        => 'required',
+                    'email'             => 'required|email:rfc,dns|max:255|unique:users,email,' . $userInfo->id,
+                    'phone_number'      => 'required|min:11|max:11|unique:user_details,phone_number,' . $userInfo->userDetails->id,
+                    'password'          => 'nullable|string|min:8',
+                    'user_role'         => 'required|numeric|exists:user_roles,id',
+                    'email_optional'    => 'nullable|email:rfc,dns|max:255',
+                    'phone_optional'    => 'nullable|min:11|max:11',
+                    'company_name'      => $request->user_role == 3 ? 'required' : 'nullable',
+                    'designation'       => $request->user_role == 3 ? 'required' : 'nullable',
+                    'address'           => $request->user_role == 4 ? 'required' : 'nullable',
+                    'image'             => 'nullable|mimes:jpeg,jpg,png',
+                    'user_status'       => 'required|numeric|in:0,1,2',
+                ],
+                [
+                    'first_name.required'   => 'User First Name is Required',
+                    'email.required'        => 'User Email is Required',
+                    'email.email'           => 'Provide Valid Email',
+                    'email.max'             => 'Provide Valid Email',
+                    'email.unique'          => 'User Email Already Exists',
+                    'phone_number.required' => 'User Phone Number is Required',
+                    'phone_number.required' => 'User Phone Number is Required',
+                    'phone_number.min'      => 'User Phone Number not Less than 11',
+                    'phone_number.max'      => 'User Phone Number not Greater than 11',
+                    'phone_number.unique'   => 'User Phone Number Already Exist',
+                    'password.min'          => 'User Password not less than 8',
+                    'user_role.required'    => 'User Role Required',
+                    'user_role.numeric'     => 'Select Valid User Role',
+                    'user_role.exists'      => 'Select Valid User Role',
+                    'email_optional.email'  => 'Provide Valid Optional Email',
+                    'email_optional.max'    => 'Provide Valid Optional Email',
+                    'phone_optional.min'    => 'Optional Phone Number not Less than 11',
+                    'phone_optional.max'    => 'Optional Phone Number not Greater than 11',
+                    'company_name.required' => 'Company Name Required',
+                    'designation.required'  => 'User Designation Required',
+                    'address.required'      => 'User Address Required',
+                    'image.mimes'           => 'User Image only jpg, jpeg & png format',
+                    'user_status.required'  => 'User Status Required',
+                    'user_status.numeric'   => 'Select Valid User Status 2',
+                    'user_status.in'        => 'Select Valid User Status'
+                ]
+            );
+
+            if ($validator->fails()) :
+                return Response([
+                    'status'    => false,
+                    'message'   => $validator->getMessageBag()->first(),
+                    'errors'    => $validator->getMessageBag()
+                ], Response::HTTP_BAD_REQUEST);
+            else :
+                // return Response([
+                //     'status'    => true,
+                //     'message'   => $request->all(),
+                //     'data'      => $userInfo
+                // ], Response::HTTP_CREATED);
+                DB::beginTransaction();
+
+                try {
+                    $userInfo->role_id      = $request->user_role;
+                    $userInfo->email        = $request->email;
+                    $userInfo->user_status  = $request->user_status;
+                    if ($request->filled('password')) :
+                        $userInfo->password = Hash::make($request->password);
+                    endif;
+                    if ($request->user_role == 5) :
+                        $userInfo->created_by = $request->customer;
+                    else :
+                        $userInfo->created_by = auth()->user()->id;
+                    endif;
+                    $userInfo->save();
+
+                    // $userInfo->user_id        = $userInfo->id;
+                    $userInfo->userDetails->first_name     = $request->first_name;
+                    $userInfo->userDetails->last_name      = $request->last_name;
+                    if ($request->filled('company_name') && $request->company_name != 'null') :
+                        $userInfo->userDetails->company_name    = $request->company_name;
+                    endif;
+                    if ($request->filled('designation') && $request->designation != 'null') :
+                        $userInfo->userDetails->designation     = $request->designation;
+                    endif;
+                    $userInfo->userDetails->email_optional = $request->email_optional;
+                    $userInfo->userDetails->phone_number   = $request->phone_number;
+                    $userInfo->userDetails->phone_optional = $request->phone_optional;
+                    if ($request->filled('address') && $request->address != 'null') :
+                        $userInfo->userDetails->address = $request->address;
+                    endif;
+                    $userInfo->userDetails->reference      = $request->reference;
+                    $userInfo->userDetails->notes          = $request->notes;
+
+                    if ($request->hasFile('image')) :
+                        $image_path = public_path($userInfo->userDetails->image);
+                        if (file_exists($image_path)) {
+                            unlink($image_path);
+                        }
+                        $file = $request->file('image');
+                        $fileExtension = $request->image->extension();
+                        $fileName = $userInfo->email . "_" . Str::random(5) . "_" . date('his') . '.' . $fileExtension;
+                        $folderpath = public_path() . '/user_image';
+                        $file->move($folderpath, $fileName);
+                        $userInfo->userDetails->image = '/user_image/' . $fileName;
+                    endif;
+
+                    $userInfo->userDetails->save();
+
+                    DB::commit();
+
+                    return Response([
+                        'status'    => true,
+                        'message'   => 'User Update Successfully',
+                        'data'      => $request->all()
+                    ], Response::HTTP_CREATED);
+                } catch (\Exception $e) {
+                    DB::rollback();
+                    return Response([
+                        'status'    => false,
+                        'message'   => $e->getMessage(),
+                        'errors'    => []
+                    ], Response::HTTP_BAD_REQUEST);
+                }
+            endif;
+        else :
+            return Response([
+                'status'    => false,
+                'message'   => 'User Not Found.',
+                'data'      => $userInfo
+            ], Response::HTTP_NOT_FOUND);
+        endif;
     }
 
     /**
