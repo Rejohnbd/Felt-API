@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -32,7 +34,7 @@ class User extends Authenticatable
         'role_id',
         'password',
         'remember_token',
-        'created_at',
+        // 'created_at',
         'updated_at',
         'deleted_at',
     ];
@@ -66,5 +68,10 @@ class User extends Authenticatable
         return $this->belongsTo(User::class, 'created_by', 'id')
             ->with('userDetails:user_id,id,first_name,last_name')
             ->select('id', 'email');
+    }
+
+    public function getCreatedAtAttribute($date)
+    {
+        return Carbon::parse($date)->format('Y-m-d');
     }
 }

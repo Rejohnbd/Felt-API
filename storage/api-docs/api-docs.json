@@ -280,6 +280,31 @@
                     }
                 }
             }
+        },
+        "/api/customer/profile": {
+            "get": {
+                "tags": [
+                    "getCustomerProfile"
+                ],
+                "summary": "Returns Customer Profile",
+                "description": "Returns Customer Profile Information",
+                "operationId": "getCustomerProfile",
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer token": []
+                    }
+                ]
+            }
         }
     }
 }

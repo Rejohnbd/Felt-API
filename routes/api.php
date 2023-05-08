@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\Admin\UserRoleController;
 use App\Http\Controllers\Api\Admin\VehicleTypeController;
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\Customer\DashboardController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -38,5 +39,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('users', UserController::class);
         Route::post('users-update', [UserController::class, 'update']);
         Route::get('customer-users', [UserController::class, 'customerUsers']);
+    });
+    // Customer
+    Route::prefix('customer')->middleware('customer')->group(function () {
+        Route::get('profile', [DashboardController::class, 'getProfile']);
+        Route::post('profile', [DashboardController::class, 'updateProfile']);
     });
 });
