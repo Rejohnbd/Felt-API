@@ -304,6 +304,112 @@
                         "Bearer token": []
                     }
                 ]
+            },
+            "post": {
+                "tags": [
+                    "updateCustomerProfile"
+                ],
+                "summary": "Updated Customer",
+                "description": "Update Customer User Profile.",
+                "operationId": "updateCustomerProfile",
+                "parameters": [
+                    {
+                        "name": "first_name",
+                        "in": "path",
+                        "description": "First Name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "last_name",
+                        "in": "path",
+                        "description": "Last Name",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "phone_optional",
+                        "in": "path",
+                        "description": "Optional Phone",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "email_optional",
+                        "in": "path",
+                        "description": "Optional Email",
+                        "schema": {
+                            "type": "email"
+                        }
+                    },
+                    {
+                        "name": "address",
+                        "in": "path",
+                        "description": "Address",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Invalid user supplied"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            }
+        },
+        "/api/customer/update-password": {
+            "post": {
+                "tags": [
+                    "updateCustomerPassword"
+                ],
+                "summary": "Updated Customer",
+                "description": "Update Customer User Profile.",
+                "operationId": "updateCustomerPassword",
+                "parameters": [
+                    {
+                        "name": "old_password",
+                        "in": "path",
+                        "description": "Old Password",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "new_password",
+                        "in": "path",
+                        "description": "New Password",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "confirm_new_password",
+                        "in": "path",
+                        "description": "Confirm New Password",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Invalid user supplied"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
             }
         }
     }

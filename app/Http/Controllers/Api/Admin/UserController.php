@@ -17,13 +17,27 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $data = User::with([
+        $query = User::with([
             'userRole',
             'userDetails',
             'createdByUser'
-        ])->orderBy('id', 'DESC')->get();
+        ]);
+        if ($request->type == 'admin') :
+            $query->where('role_id', 2);
+        elseif ($request->type == 'employee') :
+            $query->where('role_id', 3);
+        elseif ($request->type == 'customer') :
+            $query->where('role_id', 4);
+        elseif ($request->type == 'driver') :
+            $query->where('role_id', 5);
+        elseif ($request->type == 'all' || is_null($request->type)) :
+            $query->whereIn('role_id', [2, 3, 4, 5]);
+        else :
+            $query->where('role_id', 1);
+        endif;
+        $data = $query->orderBy('id', 'DESC')->get();
         return Response([
             'status'    => true,
             'message'   => 'All Users',
@@ -85,7 +99,7 @@ class UserController extends Controller
                 'address.required'      => 'User Address Required',
                 'image.mimes'           => 'User Image only jpg, jpeg & png format',
                 'user_status.required'  => 'User Status Required',
-                'user_status.numeric'   => 'Select Valid User Status 2',
+                'user_status.numeric'   => 'Select Valid User Status',
                 'user_status.in'        => 'Select Valid User Status'
             ]
         );
@@ -234,7 +248,7 @@ class UserController extends Controller
                     'address.required'      => 'User Address Required',
                     'image.mimes'           => 'User Image only jpg, jpeg & png format',
                     'user_status.required'  => 'User Status Required',
-                    'user_status.numeric'   => 'Select Valid User Status 2',
+                    'user_status.numeric'   => 'Select Valid User Status',
                     'user_status.in'        => 'Select Valid User Status'
                 ]
             );

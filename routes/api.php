@@ -44,5 +44,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('customer')->middleware('customer')->group(function () {
         Route::get('profile', [DashboardController::class, 'getProfile']);
         Route::post('profile', [DashboardController::class, 'updateProfile']);
+        Route::post('update-password', [DashboardController::class, 'updatePassword']);
     });
 });
