@@ -108,7 +108,11 @@ class AuthController extends Controller
                         'access_token'  => $user->createToken($user->email)->plainTextToken
                     ]);
                 } else {
-                    throw new AuthenticationException();
+                    return response()->json([
+                        'status'    => false,
+                        'message'   => 'Email & Password not Match',
+                    ], 401);
+                    // throw new AuthenticationException();
                 }
             } else {
                 return response()->json([
