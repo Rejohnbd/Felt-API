@@ -13,9 +13,19 @@ class DeviceController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $data = Device::with('deviceType')->orderBy('id', 'DESC')->get();
+        // $data = Device::with('deviceType')->orderBy('id', 'DESC')->get();
+        $query = Device::query();
+        if ($request->type == 'assign_to_customer') :
+            $query->select('id', 'device_imei')
+                ->where('device_use_status', 0)
+                ->where('device_health_status', 1);
+        else :
+            $query->with('deviceType');
+        endif;
+        $data = $query->orderBy('id', 'DESC')->get();
+
         return Response([
             'status'    => true,
             'message'   => 'All Devices',
