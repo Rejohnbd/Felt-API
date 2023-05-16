@@ -16,7 +16,12 @@ class VehicleController extends Controller
      */
     public function index(): Response
     {
-        $data = Vehicle::get();
+        $data = Vehicle::with([
+            'customerInfo.userDetails',
+            'vehicleType',
+            'servicePackage',
+            'deviceInfo.deviceType'
+        ])->get();
         return Response(['status' => true, 'message' => 'All Vehicle', 'data' => $data], Response::HTTP_OK);
     }
 
