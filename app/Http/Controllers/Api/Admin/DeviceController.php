@@ -18,7 +18,7 @@ class DeviceController extends Controller
         // $data = Device::with('deviceType')->orderBy('id', 'DESC')->get();
         $query = Device::query();
         if ($request->type == 'assign_to_customer') :
-            $query->select('id', 'device_imei')
+            $query->select('id', 'device_imei', 'device_sim')
                 ->where('device_use_status', 0)
                 ->where('device_health_status', 1);
         else :

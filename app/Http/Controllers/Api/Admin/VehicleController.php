@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Device;
 use App\Models\Vehicle;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -115,6 +116,9 @@ class VehicleController extends Controller
                 $newVehicle->payment_status             = $request->payment_status;
                 $newVehicle->service_status             = $request->service_status;
                 if (!empty($request->device_id)) :
+                    $deviceInfo = Device::find($request->device_id);
+                    $deviceInfo->device_use_status = 1;
+                    $deviceInfo->save();
                     $newVehicle->installation_status    = 1;
                 endif;
                 $newVehicle->save();

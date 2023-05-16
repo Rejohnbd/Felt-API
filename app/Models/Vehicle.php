@@ -21,7 +21,7 @@ class Vehicle extends Model
 
     public function servicePackage()
     {
-        return $this->hasOne(servicePackage::class, 'id', 'service_package_id');
+        return $this->hasOne(ServicePackage::class, 'id', 'service_package_id');
     }
 
     public function deviceInfo()
