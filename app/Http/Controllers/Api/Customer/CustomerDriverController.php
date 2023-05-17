@@ -3,27 +3,25 @@
 namespace App\Http\Controllers\Api\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CustomerDriverResource;
 use App\Models\Vehicle;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
-class CustomerVhicleController extends Controller
+class CustomerDriverController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     /**
-     * Display a listing of the resource.
-     */
-    /**
      * @OA\Get(
-     *     path="/api/customer/customer-vehicles",
-     *     tags={"customer-vehicles"},
-     *     summary="Returns all customer vehicle ",
+     *     path="/api/customer/customer-drivers",
+     *     tags={"customer-drivers"},
+     *     summary="Returns all customer driver",
      *     description="",
-     *     operationId="customer-vehicles",
+     *     operationId="customer-drivers",
      *     @OA\Response(
      *         response=200,
      *         description="successful operation",
@@ -42,16 +40,14 @@ class CustomerVhicleController extends Controller
     public function index(): Response
     {
         $data = Vehicle::with([
-            'driverInfo.userDetails',
             'vehicleType',
-            'servicePackage',
-            'deviceInfo.deviceType'
+            'driverInfo.userDetails'
         ])->where('customer_id', Auth::user()->id)->get();
 
         return Response([
             'status'    => true,
-            'message'   => 'Customer Vehicle',
-            'data'      => $data
+            'message'   => 'Customer Driver',
+            'data'      => CustomerDriverResource::collection($data)
         ], Response::HTTP_OK);
     }
 

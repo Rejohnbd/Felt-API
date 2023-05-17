@@ -281,6 +281,36 @@
                 }
             }
         },
+        "/api/customer/customer-drivers": {
+            "get": {
+                "tags": [
+                    "customer-drivers"
+                ],
+                "summary": "Returns all customer driver",
+                "description": "",
+                "operationId": "customer-drivers",
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": {
+                                        "type": "integer",
+                                        "format": "int32"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer token": []
+                    }
+                ]
+            }
+        },
         "/api/customer/customer-vehicles": {
             "get": {
                 "tags": [
