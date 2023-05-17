@@ -28,4 +28,9 @@ class Vehicle extends Model
     {
         return $this->hasOne(Device::class, 'id', 'device_id');
     }
+
+    public function driverInfo()
+    {
+        return $this->hasOne(User::class, 'id', 'driver_id');
+    }
 }

@@ -281,6 +281,36 @@
                 }
             }
         },
+        "/api/customer/customer-vehicles": {
+            "get": {
+                "tags": [
+                    "customer-vehicles"
+                ],
+                "summary": "Returns all customer vehicle ",
+                "description": "",
+                "operationId": "customer-vehicles",
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": {
+                                        "type": "integer",
+                                        "format": "int32"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer token": []
+                    }
+                ]
+            }
+        },
         "/api/customer/profile": {
             "get": {
                 "tags": [

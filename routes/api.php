@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\Admin\UserRoleController;
 use App\Http\Controllers\Api\Admin\VehicleController;
 use App\Http\Controllers\Api\Admin\VehicleTypeController;
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\Customer\CustomerVhicleController;
 use App\Http\Controllers\Api\Customer\DashboardController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -47,5 +48,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('profile', [DashboardController::class, 'getProfile']);
         Route::post('profile', [DashboardController::class, 'updateProfile']);
         Route::post('update-password', [DashboardController::class, 'updatePassword']);
+        Route::apiResource('customer-vehicles', CustomerVhicleController::class);
     });
 });
