@@ -405,6 +405,36 @@
                 ]
             }
         },
+        "/api/customer/customer-vehicles/id": {
+            "get": {
+                "tags": [
+                    "customer-single-vehicle"
+                ],
+                "summary": "Get customer single vehicle ",
+                "description": "",
+                "operationId": "customer-single-vehicle",
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": {
+                                        "type": "integer",
+                                        "format": "int32"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer token": []
+                    }
+                ]
+            }
+        },
         "/api/customer/profile": {
             "get": {
                 "tags": [

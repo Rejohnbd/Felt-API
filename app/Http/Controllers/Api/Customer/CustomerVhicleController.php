@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Customer\Vehicle\VehicleDetailsResource;
 use App\Http\Resources\Customer\VhicleShortListResource;
 use App\Models\Vehicle;
 use Illuminate\Http\RedirectResponse;
@@ -86,9 +87,42 @@ class CustomerVhicleController extends Controller
     /**
      * Display the specified resource.
      */
+    /**
+     * @OA\Get(
+     *     path="/api/customer/customer-vehicles/id",
+     *     tags={"customer-single-vehicle"},
+     *     summary="Get customer single vehicle ",
+     *     description="",
+     *     operationId="customer-single-vehicle",
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation",
+     *         @OA\JsonContent(
+     *             @OA\AdditionalProperties(
+     *                 type="integer",
+     *                 format="int32"
+     *             )
+     *         )
+     *     ),
+     *     security={
+     *         {"Bearer token": {}}
+     *     }
+     * )
+     */
     public function show(string $id): Response
     {
-        //
+        $data = Vehicle::with([
+            'driverInfo.userDetails',
+            'vehicleType',
+            'servicePackage',
+            'deviceInfo.deviceType'
+        ])->where('customer_id', Auth::user()->id)->findOrFail($id);
+
+        return Response([
+            'status'    => true,
+            'message'   => 'Customer Vehicle Details',
+            'data'      => new VehicleDetailsResource($data)
+        ], Response::HTTP_OK);
     }
 
     /**
