@@ -18,7 +18,7 @@ class VhicleShortListResource extends JsonResource
         return [
             'vehicle_id'        => $this->id,
             'vehicle_model'     => $this->vehicle_brand,
-            'vehicle_type'      => $this->vehicleType->vehicle_type,
+            'vehicle_type'      => $this->vehicleType->vehicle_type_name,
             'vehicle_number'    => $this->registration_number,
             'vehicle_purpose'   => $this->vehicle_purpose
         ];

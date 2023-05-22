@@ -311,6 +311,62 @@
                 ]
             }
         },
+        "/api/customer/vehicle-documents": {
+            "post": {
+                "tags": [
+                    "vehicle-documents"
+                ],
+                "summary": "Store Vehicle Document",
+                "description": "Store Vehicle Document.",
+                "operationId": "vehicle-documents",
+                "parameters": [
+                    {
+                        "name": "vehicle_id",
+                        "in": "path",
+                        "description": "Vehicle Id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "vehicle_paper_id[]",
+                        "in": "path",
+                        "description": "Vehicle Paper Id",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "expire_date[]",
+                        "in": "path",
+                        "description": "Expire Paper Id",
+                        "required": true,
+                        "schema": {
+                            "type": "date"
+                        }
+                    },
+                    {
+                        "name": "document_image[]",
+                        "in": "path",
+                        "description": "Document Image ",
+                        "required": false,
+                        "schema": {
+                            "type": "file"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Invalid user supplied"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            }
+        },
         "/api/customer/customer-vehicles": {
             "get": {
                 "tags": [

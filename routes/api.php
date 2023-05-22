@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\Admin\VehicleTypeController;
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\Customer\CustomerDriverController;
 use App\Http\Controllers\Api\Customer\CustomerVhicleController;
+use App\Http\Controllers\Api\Customer\CustomerVehicleDocument;
 use App\Http\Controllers\Api\Customer\DashboardController;
 use App\Http\Controllers\Api\VehiclePaperController;
 use Illuminate\Http\Request;
@@ -54,5 +55,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('update-password', [DashboardController::class, 'updatePassword']);
         Route::apiResource('customer-vehicles', CustomerVhicleController::class);
         Route::apiResource('customer-drivers', CustomerDriverController::class);
+        Route::apiResource('vehicle-documents', CustomerVehicleDocument::class);
     });
 });
