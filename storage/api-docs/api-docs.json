@@ -319,6 +319,14 @@
                 "summary": "Returns all customer vehicle ",
                 "description": "",
                 "operationId": "customer-vehicles",
+                "parameters": [
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "description": "shortList",
+                        "required": false
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "successful operation",
@@ -470,6 +478,36 @@
                         "description": "User not found"
                     }
                 }
+            }
+        },
+        "/api/vehicle-papers": {
+            "get": {
+                "tags": [
+                    "vehicle-papers"
+                ],
+                "summary": "Returns all vehicle-papers",
+                "description": "All vehicle papers. This is GET api common for both user Admin & Customer user",
+                "operationId": "vehicle-papers",
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": {
+                                        "type": "integer",
+                                        "format": "int32"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer token": []
+                    }
+                ]
             }
         }
     }

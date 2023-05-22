@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\Customer\CustomerDriverController;
 use App\Http\Controllers\Api\Customer\CustomerVhicleController;
 use App\Http\Controllers\Api\Customer\DashboardController;
+use App\Http\Controllers\Api\VehiclePaperController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -31,6 +32,8 @@ Route::get('/sanctum/csrf-cookie', [AuthController::class, 'sanctumRevoke']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('user', [AuthController::class, 'user']);
     Route::get('/user/revoke', [AuthController::class, 'sanctumRevoke']);
+    // Common
+    Route::apiResource('vehicle-papers', VehiclePaperController::class);
     // Admin
     Route::prefix('admin')->middleware('admin')->group(function () {
         Route::get('all-users', [AuthController::class, 'allUsers']);

@@ -1,33 +1,25 @@
 <?php
 
-namespace App\Http\Controllers\Api\Customer;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Customer\VhicleShortListResource;
-use App\Models\Vehicle;
+use App\Models\VehiclePaper;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
 
-class CustomerVhicleController extends Controller
+class VehiclePaperController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     /**
      * @OA\Get(
-     *     path="/api/customer/customer-vehicles",
-     *     tags={"customer-vehicles"},
-     *     summary="Returns all customer vehicle ",
-     *     description="",
-     *     operationId="customer-vehicles",
-     *      @OA\Parameter(
-     *         name="type",
-     *         in="query",
-     *         description="shortList",
-     *         required=false,
-     *      ),
+     *     path="/api/vehicle-papers",
+     *     tags={"vehicle-papers"},
+     *     summary="Returns all vehicle-papers",
+     *     description="All vehicle papers. This is GET api common for both user Admin & Customer user",
+     *     operationId="vehicle-papers",
      *     @OA\Response(
      *         response=200,
      *         description="successful operation",
@@ -43,28 +35,14 @@ class CustomerVhicleController extends Controller
      *     }
      * )
      */
-    public function index(Request $request): Response
+    public function index(): Response
     {
-        $data = Vehicle::with([
-            'driverInfo.userDetails',
-            'vehicleType',
-            'servicePackage',
-            'deviceInfo.deviceType'
-        ])->where('customer_id', Auth::user()->id)->get();
-
-        if ($request->type == 'shortList') :
-            return Response([
-                'status'    => true,
-                'message'   => 'Customer Vehicle',
-                'data'      => VhicleShortListResource::collection($data)
-            ], Response::HTTP_OK);
-        else :
-            return Response([
-                'status'    => true,
-                'message'   => 'Customer Vehicle',
-                'data'      => $data
-            ], Response::HTTP_OK);
-        endif;
+        $data = VehiclePaper::all();
+        return Response([
+            'status'    => true,
+            'message'   => 'Vehicle Paper',
+            'data'      => $data
+        ], Response::HTTP_OK);
     }
 
     /**
