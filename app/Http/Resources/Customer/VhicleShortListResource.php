@@ -16,11 +16,11 @@ class VhicleShortListResource extends JsonResource
     {
         // return parent::toArray($request);
         return [
-            'vehicle_id'        => $this->id,
-            'vehicle_model'     => $this->vehicle_brand,
-            'vehicle_type'      => $this->vehicleType->vehicle_type_name,
-            'vehicle_number'    => $this->registration_number,
-            'vehicle_purpose'   => $this->vehicle_purpose
+            'id'                    => $this->id,
+            'vehicle_brand'         => $this->vehicle_brand,
+            'vehicle_type_name'     => $this->vehicleType->vehicle_type_name,
+            'registration_number'   => $this->registration_number,
+            'vehicle_purpose'       => $this->vehicle_purpose
         ];
     }
 }
