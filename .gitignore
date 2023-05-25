@@ -7,6 +7,7 @@
 /public/vehicle_type_image/*
 /public/user_image/*
 /public/vehicle_document/*
+/public/license/*
 # .env
 # .env.backup
 # .env.production
