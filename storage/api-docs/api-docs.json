@@ -428,6 +428,36 @@
                 }
             }
         },
+        "/api/customer/customer-drivers/id": {
+            "get": {
+                "tags": [
+                    "customer-driver-single"
+                ],
+                "summary": "Get customer single driver ",
+                "description": "",
+                "operationId": "customer-driver-single",
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": {
+                                        "type": "integer",
+                                        "format": "int32"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer token": []
+                    }
+                ]
+            }
+        },
         "/api/customer/vehicle-documents": {
             "post": {
                 "tags": [

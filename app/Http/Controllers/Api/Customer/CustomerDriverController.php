@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Customer\Driver\SingleDriverResouce;
 use App\Http\Resources\CustomerDriverResource;
 use App\Models\User;
 use App\Models\UserDetails;
@@ -305,19 +306,40 @@ class CustomerDriverController extends Controller
     /**
      * Display the specified resource.
      */
+    /**
+     * @OA\Get(
+     *     path="/api/customer/customer-drivers/id",
+     *     tags={"customer-driver-single"},
+     *     summary="Get customer single driver ",
+     *     description="",
+     *     operationId="customer-driver-single",
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation",
+     *         @OA\JsonContent(
+     *             @OA\AdditionalProperties(
+     *                 type="integer",
+     *                 format="int32"
+     *             )
+     *         )
+     *     ),
+     *     security={
+     *         {"Bearer token": {}}
+     *     }
+     * )
+     */
     public function show(string $id): Response
     {
-        // $data = Vehicle::with([
-        //     'vehicleType',
-        //     'driverInfo.userDetails',
-        // ])->where('customer_id', Auth::user()->id)->where('driver_id', $id)->first();
-        $userInfo = User::with(['userRole', 'userDetails'])->find($id);
+        $data = User::with('userDetails.vehicle')
+            ->where('role_id', 5)
+            ->where('created_by', Auth::user()->id)
+            ->where('id', $id)->first();
+
         return Response([
             'status'    => true,
-            'message'   => 'Customer Driver',
-            'data'      => $userInfo
+            'message'   => 'Customer Driver Details',
+            'data'      => new SingleDriverResouce($data)
         ], Response::HTTP_OK);
-        // dd($userInfo);
     }
 
     /**
