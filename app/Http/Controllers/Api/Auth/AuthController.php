@@ -96,16 +96,29 @@ class AuthController extends Controller
                 'errors'    => $validator->getMessageBag()
             ]);
         } else {
-            if (Auth::attempt($request->only(['email', 'password']))) {
-                $user = Auth::user()->load(['userRole', 'userDetails']);
-                return response()->json([
-                    'status'        => 200,
-                    'message'       => 'Logged in successfully',
-                    'user'          => Auth::user(),
-                    'access_token'  => $user->createToken($user->email)->plainTextToken
-                ]);
+            $checkEmailExists = User::where('email', $request->email)->exists();
+
+            if ($checkEmailExists) {
+                if (Auth::attempt($request->only(['email', 'password']))) {
+                    $user = Auth::user()->load(['userRole', 'userDetails']);
+                    return response()->json([
+                        'status'        => 200,
+                        'message'       => 'Logged in successfully',
+                        'user'          => Auth::user(),
+                        'access_token'  => $user->createToken($user->email)->plainTextToken
+                    ]);
+                } else {
+                    return response()->json([
+                        'status'    => false,
+                        'message'   => 'Email & Password not Match',
+                    ], 401);
+                    // throw new AuthenticationException();
+                }
             } else {
-                throw new AuthenticationException();
+                return response()->json([
+                    'status'    => false,
+                    'message'   => 'Email Not Exists.',
+                ], 400);
             }
         }
     }

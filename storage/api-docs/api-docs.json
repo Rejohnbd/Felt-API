@@ -280,6 +280,496 @@
                     }
                 }
             }
+        },
+        "/api/customer/customer-drivers": {
+            "get": {
+                "tags": [
+                    "customer-drivers"
+                ],
+                "summary": "Returns all customer driver",
+                "description": "",
+                "operationId": "customer-drivers",
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": {
+                                        "type": "integer",
+                                        "format": "int32"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "customer-drivers-add"
+                ],
+                "summary": "Store Driver Info",
+                "description": "Store Driver.",
+                "operationId": "customer-drivers-add",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "path",
+                        "description": "Driver Email",
+                        "required": true,
+                        "schema": {
+                            "type": "email"
+                        }
+                    },
+                    {
+                        "name": "password",
+                        "in": "path",
+                        "description": "Driver Password",
+                        "required": true,
+                        "schema": {
+                            "type": "password"
+                        }
+                    },
+                    {
+                        "name": "phone_number",
+                        "in": "path",
+                        "description": "Driver Phone Number",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "phone_optional",
+                        "in": "path",
+                        "description": "Driver Optional Phone Number",
+                        "required": false,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "first_name",
+                        "in": "path",
+                        "description": "Driver First Name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "last_name",
+                        "in": "path",
+                        "description": "Driver Last Name",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "license_number",
+                        "in": "path",
+                        "description": "Driver License Number",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "license_expire_date",
+                        "in": "path",
+                        "description": "Driver License Expire Date",
+                        "required": false,
+                        "schema": {
+                            "type": "date"
+                        }
+                    },
+                    {
+                        "name": "driver_status",
+                        "in": "path",
+                        "description": "Driver Status in 0 or 1",
+                        "required": true,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "license_picture",
+                        "in": "path",
+                        "description": "License Image",
+                        "required": false,
+                        "schema": {
+                            "type": "file"
+                        }
+                    },
+                    {
+                        "name": "image",
+                        "in": "path",
+                        "description": "Driver Profile Image",
+                        "required": false,
+                        "schema": {
+                            "type": "file"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Invalid user supplied"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            }
+        },
+        "/api/customer/customer-drivers/id": {
+            "get": {
+                "tags": [
+                    "customer-driver-single"
+                ],
+                "summary": "Get customer single driver ",
+                "description": "",
+                "operationId": "customer-driver-single",
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": {
+                                        "type": "integer",
+                                        "format": "int32"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer token": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "customer-drivers-delete"
+                ],
+                "summary": "Delete customer driver",
+                "description": "",
+                "operationId": "customer-drivers-delete",
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": {
+                                        "type": "integer",
+                                        "format": "int32"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer token": []
+                    }
+                ]
+            }
+        },
+        "/api/customer/vehicle-documents": {
+            "post": {
+                "tags": [
+                    "vehicle-documents"
+                ],
+                "summary": "Store Vehicle Document",
+                "description": "Store Vehicle Document.",
+                "operationId": "vehicle-documents",
+                "parameters": [
+                    {
+                        "name": "vehicle_id",
+                        "in": "path",
+                        "description": "Vehicle Id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "vehicle_paper_id[]",
+                        "in": "path",
+                        "description": "Vehicle Paper Id",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "expire_date[]",
+                        "in": "path",
+                        "description": "Expire Paper Id",
+                        "required": true,
+                        "schema": {
+                            "type": "date"
+                        }
+                    },
+                    {
+                        "name": "document_image[]",
+                        "in": "path",
+                        "description": "Document Image ",
+                        "required": false,
+                        "schema": {
+                            "type": "file"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Invalid user supplied"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            }
+        },
+        "/api/customer/customer-vehicles": {
+            "get": {
+                "tags": [
+                    "customer-vehicles"
+                ],
+                "summary": "Returns all customer vehicle ",
+                "description": "",
+                "operationId": "customer-vehicles",
+                "parameters": [
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "description": "shortList",
+                        "required": false
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": {
+                                        "type": "integer",
+                                        "format": "int32"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer token": []
+                    }
+                ]
+            }
+        },
+        "/api/customer/customer-vehicles/id": {
+            "get": {
+                "tags": [
+                    "customer-single-vehicle"
+                ],
+                "summary": "Get customer single vehicle ",
+                "description": "",
+                "operationId": "customer-single-vehicle",
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": {
+                                        "type": "integer",
+                                        "format": "int32"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer token": []
+                    }
+                ]
+            }
+        },
+        "/api/customer/profile": {
+            "get": {
+                "tags": [
+                    "getCustomerProfile"
+                ],
+                "summary": "Returns Customer Profile",
+                "description": "Returns Customer Profile Information",
+                "operationId": "getCustomerProfile",
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "updateCustomerProfile"
+                ],
+                "summary": "Updated Customer",
+                "description": "Update Customer User Profile.",
+                "operationId": "updateCustomerProfile",
+                "parameters": [
+                    {
+                        "name": "first_name",
+                        "in": "path",
+                        "description": "First Name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "last_name",
+                        "in": "path",
+                        "description": "Last Name",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "phone_optional",
+                        "in": "path",
+                        "description": "Optional Phone",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "email_optional",
+                        "in": "path",
+                        "description": "Optional Email",
+                        "schema": {
+                            "type": "email"
+                        }
+                    },
+                    {
+                        "name": "address",
+                        "in": "path",
+                        "description": "Address",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Invalid user supplied"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            }
+        },
+        "/api/customer/update-password": {
+            "post": {
+                "tags": [
+                    "updateCustomerPassword"
+                ],
+                "summary": "Updated Customer",
+                "description": "Update Customer User Profile.",
+                "operationId": "updateCustomerPassword",
+                "parameters": [
+                    {
+                        "name": "old_password",
+                        "in": "path",
+                        "description": "Old Password",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "new_password",
+                        "in": "path",
+                        "description": "New Password",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "confirm_new_password",
+                        "in": "path",
+                        "description": "Confirm New Password",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Invalid user supplied"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            }
+        },
+        "/api/vehicle-papers": {
+            "get": {
+                "tags": [
+                    "vehicle-papers"
+                ],
+                "summary": "Returns all vehicle-papers",
+                "description": "All vehicle papers. This is GET api common for both user Admin & Customer user",
+                "operationId": "vehicle-papers",
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": {
+                                        "type": "integer",
+                                        "format": "int32"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer token": []
+                    }
+                ]
+            }
         }
     }
 }

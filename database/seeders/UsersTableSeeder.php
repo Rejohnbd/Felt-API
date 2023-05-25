@@ -45,7 +45,7 @@ class UsersTableSeeder extends Seeder
             'email'         => 'driver@mail.com',
             'password'      => Hash::make('password'),
             'user_status'   => 1,
-            'created_by'    => 1
+            'created_by'    => 4
         ]);
     }
 }

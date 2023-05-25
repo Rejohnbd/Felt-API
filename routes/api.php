@@ -5,8 +5,14 @@ use App\Http\Controllers\Api\Admin\DeviceTypeController;
 use App\Http\Controllers\Api\Admin\ServicePackageController;
 use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\Admin\UserRoleController;
+use App\Http\Controllers\Api\Admin\VehicleController;
 use App\Http\Controllers\Api\Admin\VehicleTypeController;
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\Customer\CustomerDriverController;
+use App\Http\Controllers\Api\Customer\CustomerVhicleController;
+use App\Http\Controllers\Api\Customer\CustomerVehicleDocument;
+use App\Http\Controllers\Api\Customer\DashboardController;
+use App\Http\Controllers\Api\VehiclePaperController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -27,6 +33,8 @@ Route::get('/sanctum/csrf-cookie', [AuthController::class, 'sanctumRevoke']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('user', [AuthController::class, 'user']);
     Route::get('/user/revoke', [AuthController::class, 'sanctumRevoke']);
+    // Common
+    Route::apiResource('vehicle-papers', VehiclePaperController::class);
     // Admin
     Route::prefix('admin')->middleware('admin')->group(function () {
         Route::get('all-users', [AuthController::class, 'allUsers']);
@@ -38,5 +46,15 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('users', UserController::class);
         Route::post('users-update', [UserController::class, 'update']);
         Route::get('customer-users', [UserController::class, 'customerUsers']);
+        Route::apiResource('vehicles', VehicleController::class);
+    });
+    // Customer
+    Route::prefix('customer')->middleware('customer')->group(function () {
+        Route::get('profile', [DashboardController::class, 'getProfile']);
+        Route::post('profile', [DashboardController::class, 'updateProfile']);
+        Route::post('update-password', [DashboardController::class, 'updatePassword']);
+        Route::apiResource('customer-vehicles', CustomerVhicleController::class);
+        Route::apiResource('customer-drivers', CustomerDriverController::class);
+        Route::apiResource('vehicle-documents', CustomerVehicleDocument::class);
     });
 });
