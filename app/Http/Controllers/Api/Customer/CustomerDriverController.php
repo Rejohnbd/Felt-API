@@ -196,7 +196,8 @@ class CustomerDriverController extends Controller
                 'license_number'        => 'required|unique:user_details,license_number',
                 'license_expire_date'   => 'nullable|date_format:Y-m-d',
                 'license_picture'       => 'nullable|mimes:jpeg,jpg,png',
-                'image'                 => 'nullable|mimes:jpeg,jpg,png'
+                'image'                 => 'nullable|mimes:jpeg,jpg,png',
+                'driver_status'         => 'required|in:0,1'
             ],
             [
                 // 'vehicle_id.required'               => 'Vehicle Select Require',
@@ -221,6 +222,8 @@ class CustomerDriverController extends Controller
                 'license_expire_date.date_format'   => 'Provide Valid License Expire Date',
                 'license_picture.mimes'             => 'License Picture Must be format .jpg, .jpeg, .png',
                 'image.mimes'                       => 'Driver Picture Must be format .jpg, .jpeg, .png',
+                'driver_status.required'            => 'Driver Status Required',
+                'driver_status.in'                  => 'Provide Valid Driver Status',
             ]
         );
 
@@ -361,8 +364,48 @@ class CustomerDriverController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id): RedirectResponse
+    /**
+     * @OA\Delete(
+     *     path="/api/customer/customer-drivers/id",
+     *     tags={"customer-drivers-delete"},
+     *     summary="Delete customer driver",
+     *     description="",
+     *     operationId="customer-drivers-delete",
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation",
+     *         @OA\JsonContent(
+     *             @OA\AdditionalProperties(
+     *                 type="integer",
+     *                 format="int32"
+     *             )
+     *         )
+     *     ),
+     *     security={
+     *         {"Bearer token": {}}
+     *     }
+     * )
+     */
+    public function destroy(string $id): Response
     {
-        //
+        $data = User::with('userDetails.vehicle')
+            ->where('role_id', 5)
+            ->where('created_by', Auth::user()->id)
+            ->findOrFail($id);
+
+        if (!is_null($data->userDetails->vehicle)) :
+            $data->userDetails->vehicle->update([
+                'driver_id' => Auth::user()->id
+            ]);
+        endif;
+
+        $data->userDetails->delete();
+        $data->delete();
+
+        return Response([
+            'status'    => true,
+            'message'   => 'Customer Driver Deleted',
+            'data'      => new SingleDriverResouce($data)
+        ], Response::HTTP_OK);
     }
 }

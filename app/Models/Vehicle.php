@@ -9,6 +9,10 @@ class Vehicle extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'driver_id'
+    ];
+
     public function customerInfo()
     {
         return $this->hasOne(User::class, 'id', 'customer_id');
