@@ -74,15 +74,6 @@ class CustomerDriverController extends Controller
      *     description="Store Driver.",
      *     operationId="customer-drivers-add",
      *     @OA\Parameter(
-     *         name="vehicle_id",
-     *         in="path",
-     *         description="Vehicle Id",
-     *         required=true,
-     *         @OA\Schema(
-     *             type="string"
-     *         )
-     *     ),
-     *     @OA\Parameter(
      *         name="email",
      *         in="path",
      *         description="Driver Email",
@@ -196,7 +187,7 @@ class CustomerDriverController extends Controller
         $validator = validator(
             $request->all(),
             [
-                'vehicle_id'            => 'required|numeric|exists:vehicles,id',
+                // 'vehicle_id'            => 'required|numeric|exists:vehicles,id',
                 'email'                 => 'required|email:rfc,dns|max:255|unique:users,email',
                 'password'              => 'required|string|min:8',
                 'phone_number'          => 'required|min:11|max:11|unique:users,phone_number',
@@ -208,9 +199,9 @@ class CustomerDriverController extends Controller
                 'image'                 => 'nullable|mimes:jpeg,jpg,png'
             ],
             [
-                'vehicle_id.required'               => 'Vehicle Select Require',
-                'vehicle_id.numeric'                => 'Provide Valid Vehicle Info',
-                'vehicle_id.exists'                 => 'Provide Valid Vehicle Info',
+                // 'vehicle_id.required'               => 'Vehicle Select Require',
+                // 'vehicle_id.numeric'                => 'Provide Valid Vehicle Info',
+                // 'vehicle_id.exists'                 => 'Provide Valid Vehicle Info',
                 'email.required'                    => 'Email is Require',
                 'email.email'                       => 'Provide Valid Email Address',
                 'email.max'                         => 'Provide Valid Email Address',
@@ -233,12 +224,12 @@ class CustomerDriverController extends Controller
             ]
         );
 
-        $validator->after(function ($validator) use ($request) {
-            $exists = Vehicle::where('id', $request->vehicle_id)->where('customer_id', Auth::user()->id)->exists();
-            if (!$exists) :
-                $validator->errors()->add('vehicle_id', 'Vehicle Info & Customer Info not Match');
-            endif;
-        });
+        // $validator->after(function ($validator) use ($request) {
+        //     $exists = Vehicle::where('id', $request->vehicle_id)->where('customer_id', Auth::user()->id)->exists();
+        //     if (!$exists) :
+        //         $validator->errors()->add('vehicle_id', 'Vehicle Info & Customer Info not Match');
+        //     endif;
+        // });
 
         if ($validator->fails()) :
             return Response([
@@ -288,11 +279,11 @@ class CustomerDriverController extends Controller
 
                 $newUserDetails->save();
 
-                Vehicle::where('id', $request->vehicle_id)
-                    ->where('customer_id', Auth::user()->id)
-                    ->update([
-                        'driver_id' => $newUser->id
-                    ]);
+                // Vehicle::where('id', $request->vehicle_id)
+                //     ->where('customer_id', Auth::user()->id)
+                //     ->update([
+                //         'driver_id' => $newUser->id
+                //     ]);
 
                 DB::commit();
 

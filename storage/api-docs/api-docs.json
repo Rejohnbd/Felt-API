@@ -319,15 +319,6 @@
                 "operationId": "customer-drivers-add",
                 "parameters": [
                     {
-                        "name": "vehicle_id",
-                        "in": "path",
-                        "description": "Vehicle Id",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
                         "name": "email",
                         "in": "path",
                         "description": "Driver Email",
