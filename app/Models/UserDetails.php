@@ -15,4 +15,9 @@ class UserDetails extends Model
         'created_at',
         'updated_at',
     ];
+
+    public function vehicle()
+    {
+        return $this->hasOne(Vehicle::class, 'driver_id', 'user_id');
+    }
 }

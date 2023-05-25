@@ -16,19 +16,18 @@ class CustomerDriverResource extends JsonResource
     {
         // return parent::toArray($request);
         return [
-            'id'                    => $this->driverInfo->id,
-            'email'                 => $this->driverInfo->email,
-            'first_name'            => $this->driverInfo->userDetails->first_name,
-            'last_name'             => $this->driverInfo->userDetails->last_name,
-            'phone_number'          => $this->driverInfo->userDetails->phone_number,
-            'phone_number'          => $this->driverInfo->userDetails->phone_number,
-            'phone_optional'        => $this->driverInfo->userDetails->phone_optional,
-            'image'                 => $this->driverInfo->userDetails->image,
-            'registration_number'   => $this->registration_number,
-            'vehicle_brand'         => $this->vehicle_brand,
-            'vehicle_model_year'    => $this->vehicle_model_year,
-            'vehicle_type_name'     => $this->vehicleType->vehicle_type_name,
-            'vehicle_type_image'    => $this->vehicleType->vehicle_type_image
+            'id'                    => $this->id,
+            'email'                 => $this->email,
+            'first_name'            => $this->userDetails->first_name,
+            'last_name'             => $this->userDetails->last_name,
+            'phone_number'          => $this->phone_number,
+            'phone_optional'        => $this->userDetails->phone_optional,
+            'image'                 => $this->userDetails->image,
+            'registration_number'   => $this->userDetails->vehicle ? $this->userDetails->vehicle->registration_number : null,
+            'vehicle_brand'         => $this->userDetails->vehicle ? $this->userDetails->vehicle->vehicle_brand : null,
+            'vehicle_model_year'    => $this->userDetails->vehicle ? $this->userDetails->vehicle->vehicle_model_year : null,
+            'vehicle_type_name'     => $this->userDetails->vehicle ? $this->userDetails->vehicle->vehicleType->vehicle_type_name : null,
+            'vehicle_type_image'    => $this->userDetails->vehicle ? $this->userDetails->vehicle->vehicleType->vehicle_type_image : null
         ];
     }
 }

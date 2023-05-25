@@ -43,10 +43,9 @@ class CustomerDriverController extends Controller
      */
     public function index(): Response
     {
-        $data = Vehicle::with([
-            'vehicleType',
-            'driverInfo.userDetails'
-        ])->where('customer_id', Auth::user()->id)->get();
+        $data = User::with('userDetails.vehicle')
+            ->where('role_id', 5)
+            ->where('created_by', Auth::user()->id)->get();
 
         return Response([
             'status'    => true,

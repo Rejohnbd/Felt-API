@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('user_details', function (Blueprint $table) {
-            $table->string('license_number')->nullable()->after('image');
-            $table->date('license_expire_date')->nullable()->unique()->after('license_number');
+            $table->string('license_number')->nullable()->unique()->after('image');
+            $table->date('license_expire_date')->nullable()->after('license_number');
             $table->string('license_picture')->nullable()->after('license_expire_date');
         });
     }
