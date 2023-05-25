@@ -201,11 +201,6 @@ class UserController extends Controller
      */
     public function update(Request $request): Response
     {
-        // return Response([
-        //     'status'    => true,
-        //     'message'   => 'User Created Successfully',
-        //     'data'      => $request->all()
-        // ], Response::HTTP_CREATED);
         $userInfo = User::with(['userRole', 'userDetails'])->find($request->id);
         if (!is_null($userInfo)) :
             $validator = validator(

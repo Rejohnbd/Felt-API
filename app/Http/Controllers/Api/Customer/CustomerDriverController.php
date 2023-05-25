@@ -356,9 +356,53 @@ class CustomerDriverController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id): RedirectResponse
+    public function update(Request $request, string $id): Response
     {
-        //
+        $data = User::with('userDetails.vehicle')
+            ->where('role_id', 5)
+            ->where('created_by', Auth::user()->id)
+            ->findOrFail($id);
+        // dd($request->all());
+        $validator = validator(
+            $request->all(),
+            [
+                'phone_number'          => 'required|min:11|max:11|unique:users,phone_number,' . $data->id,
+                'phone_optional'        => 'nullable|min:11|max:11',
+                'first_name'            => 'required|string',
+                'license_number'        => 'required|unique:user_details,license_number',
+                'license_expire_date'   => 'nullable|date_format:Y-m-d',
+                'license_picture'       => 'nullable|mimes:jpeg,jpg,png',
+                'image'                 => 'nullable|mimes:jpeg,jpg,png',
+                'driver_status'         => 'required|in:0,1'
+            ],
+            [
+                'phone_number.required'             => 'Phone Number is Require',
+                'phone_number.min'                  => 'Phone Number not less than 11 digits',
+                'phone_number.max'                  => 'Phone Number not greater than 11 digits',
+                'phone_number.unique'               => 'Phone Number Already Exists',
+                'phone_optional.min'                => 'Optional Phone Number not less than 11 digits',
+                'phone_optional.max'                => 'Optional Phone Number not greater than 11 digits',
+                'first_name.required'               => 'First Name is Require',
+                'first_name.string'                 => 'Provide Valid First Name',
+                'license_number.required'           => 'License Number is Require',
+                'license_number.unique'             => 'License Number already Exists',
+                'license_expire_date.date_format'   => 'Provide Valid License Expire Date',
+                'license_picture.mimes'             => 'License Picture Must be format .jpg, .jpeg, .png',
+                'image.mimes'                       => 'Driver Picture Must be format .jpg, .jpeg, .png',
+                'driver_status.required'            => 'Driver Status Required',
+                'driver_status.in'                  => 'Provide Valid Driver Status',
+            ]
+        );
+
+        if ($validator->fails()) :
+            return Response([
+                'status' => false,
+                'message' => $validator->getMessageBag()->first(),
+                'errors' => $validator->getMessageBag()
+            ], Response::HTTP_BAD_REQUEST);
+        else :
+            dd($request->all());
+        endif;
     }
 
     /**
