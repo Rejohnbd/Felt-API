@@ -606,6 +606,34 @@
             }
         },
         "/api/customer/vehicle-documents": {
+            "get": {
+                "tags": [
+                    "vehicle-documents"
+                ],
+                "summary": "Returns all customer documents",
+                "description": "return customer documents",
+                "operationId": "get-vehicle-documents",
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": {
+                                        "type": "integer",
+                                        "format": "int32"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer token": []
+                    }
+                ]
+            },
             "post": {
                 "tags": [
                     "vehicle-documents"
@@ -792,6 +820,75 @@
                         "description": "User not found"
                     }
                 }
+            }
+        },
+        "/api/customer/customer-vehicles-speed-limitation/id": {
+            "get": {
+                "tags": [
+                    "customer-vehicles-speed-limitation"
+                ],
+                "summary": "Get customer vehicle speed info",
+                "description": "",
+                "operationId": "customer-vehicles-speed-limitation",
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": {
+                                        "type": "integer",
+                                        "format": "int32"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer token": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "customer-vehicles-speed-limitation-update"
+                ],
+                "summary": "Update customer vehicle speed info",
+                "description": "",
+                "operationId": "customer-vehicles-speed-limitation-update",
+                "parameters": [
+                    {
+                        "name": "speed_limitation",
+                        "in": "path",
+                        "description": "Speed Limitation",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": {
+                                        "type": "integer",
+                                        "format": "int32"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer token": []
+                    }
+                ]
             }
         },
         "/api/customer/profile": {

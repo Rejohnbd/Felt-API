@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Customer\VehicleDocument\VehicleDocumentResource;
+use App\Models\Vehicle;
 use App\Models\VehicleDocument;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -16,9 +18,36 @@ class CustomerVehicleDocument extends Controller
     /**
      * Display a listing of the resource.
      */
+    /**
+     * @OA\Get(
+     *     path="/api/customer/vehicle-documents",
+     *     tags={"vehicle-documents"},
+     *     summary="Returns all customer documents",
+     *     description="return customer documents",
+     *     operationId="get-vehicle-documents",
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation",
+     *         @OA\JsonContent(
+     *             @OA\AdditionalProperties(
+     *                 type="integer",
+     *                 format="int32"
+     *             )
+     *         )
+     *     ),
+     *     security={
+     *         {"Bearer token": {}}
+     *     }
+     * )
+     */
     public function index(): Response
     {
-        //
+        $data = Vehicle::with(['documents.documentPaper'])->where('customer_id', Auth::user()->id)->get();
+        return Response([
+            'status'    => true,
+            'message'   => 'Customer Vehicle Document',
+            'data'      => VehicleDocumentResource::collection($data)
+        ], Response::HTTP_OK);
     }
 
     /**

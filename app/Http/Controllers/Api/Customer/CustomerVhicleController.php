@@ -266,4 +266,104 @@ class CustomerVhicleController extends Controller
             ], Response::HTTP_CREATED);
         endif;
     }
+
+    /**
+     * @OA\Get(
+     *     path="/api/customer/customer-vehicles-speed-limitation/id",
+     *     tags={"customer-vehicles-speed-limitation"},
+     *     summary="Get customer vehicle speed info",
+     *     description="",
+     *     operationId="customer-vehicles-speed-limitation",
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation",
+     *         @OA\JsonContent(
+     *             @OA\AdditionalProperties(
+     *                 type="integer",
+     *                 format="int32"
+     *             )
+     *         )
+     *     ),
+     *     security={
+     *         {"Bearer token": {}}
+     *     }
+     * )
+     */
+    public function speedLimitation(string $id): Response
+    {
+        $data = Vehicle::select('id', 'speed_limitation')->where('customer_id', Auth::user()->id)->findOrFail($id);
+
+        return Response([
+            'status'    => true,
+            'message'   => 'Customer Vehicle Speed Info',
+            'data'      => array(
+                'id'                => $data->id,
+                'speed_limitation'  => $data->speed_limitation,
+            )
+        ], Response::HTTP_OK);
+    }
+
+    /**
+     * @OA\Put(
+     *     path="/api/customer/customer-vehicles-speed-limitation/id",
+     *     tags={"customer-vehicles-speed-limitation-update"},
+     *     summary="Update customer vehicle speed info",
+     *     description="",
+     *     operationId="customer-vehicles-speed-limitation-update",
+     *     @OA\Parameter(
+     *         name="speed_limitation",
+     *         in="path",
+     *         description="Speed Limitation",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation",
+     *         @OA\JsonContent(
+     *             @OA\AdditionalProperties(
+     *                 type="integer",
+     *                 format="int32"
+     *             )
+     *         )
+     *     ),
+     *     security={
+     *         {"Bearer token": {}}
+     *     }
+     * )
+     */
+    public function speedLimitationUpdate(Request $request, string $id): Response
+    {
+        $validator = validator(
+            $request->all(),
+            [
+                'speed_limitation'      => 'required|numeric',
+            ],
+            [
+                'speed_limitation.required' => 'Speed Limitation is Required',
+                'speed_limitation.numeric'  => 'Provide Valid Speed Limitation'
+            ]
+        );
+        if ($validator->fails()) :
+            return Response([
+                'status' => false,
+                'message' => $validator->getMessageBag()->first(),
+                'errors' => $validator->getMessageBag()
+            ], Response::HTTP_BAD_REQUEST);
+        else :
+            $data = Vehicle::select('id', 'speed_limitation')->where('customer_id', Auth::user()->id)->findOrFail($id);
+            $data->speed_limitation = $request->speed_limitation;
+            $data->save();
+            return Response([
+                'status'    => true,
+                'message'   => 'Customer Vehicle Speed Info',
+                'data'      => array(
+                    'id'                => $data->id,
+                    'speed_limitation'  => $data->speed_limitation,
+                )
+            ], Response::HTTP_CREATED);
+        endif;
+    }
 }

@@ -37,4 +37,9 @@ class Vehicle extends Model
     {
         return $this->hasOne(User::class, 'id', 'driver_id');
     }
+
+    public function documents()
+    {
+        return $this->hasMany(VehicleDocument::class);
+    }
 }

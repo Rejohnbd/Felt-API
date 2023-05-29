@@ -55,6 +55,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('update-password', [DashboardController::class, 'updatePassword']);
         Route::apiResource('customer-vehicles', CustomerVhicleController::class);
         Route::post('vehicle-update', [CustomerVhicleController::class, 'vehicleUpdate']);
+        Route::get('customer-vehicles-speed-limitation/{id}', [CustomerVhicleController::class, 'speedLimitation']);
+        Route::put('customer-vehicles-speed-limitation/{id}', [CustomerVhicleController::class, 'speedLimitationUpdate']);
         Route::apiResource('customer-drivers', CustomerDriverController::class);
         Route::apiResource('vehicle-documents', CustomerVehicleDocument::class);
     });
