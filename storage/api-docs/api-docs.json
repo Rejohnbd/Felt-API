@@ -729,6 +729,71 @@
                 ]
             }
         },
+        "/api/customer/vehicle-update": {
+            "post": {
+                "tags": [
+                    "vehicle-update-purpose"
+                ],
+                "summary": "Update Vehicle Purpose",
+                "description": "Update Vehicle Purpose.",
+                "operationId": "vehicle-update-purpose",
+                "parameters": [
+                    {
+                        "name": "vehicle_id",
+                        "in": "path",
+                        "description": "Vehicle Id",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "vehicle_purpose",
+                        "in": "path",
+                        "description": "Vehicle Purpose",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fuel_capacity",
+                        "in": "path",
+                        "description": "Fuel Congestion",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "vehicle_kpl",
+                        "in": "path",
+                        "description": "Milage",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "driver_id",
+                        "in": "path",
+                        "description": "Driver Id",
+                        "required": false,
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Invalid user supplied"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            }
+        },
         "/api/customer/profile": {
             "get": {
                 "tags": [

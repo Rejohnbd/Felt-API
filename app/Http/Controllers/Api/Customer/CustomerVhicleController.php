@@ -148,4 +148,122 @@ class CustomerVhicleController extends Controller
     {
         //
     }
+
+    /**
+     * @OA\Post(
+     *     path="/api/customer/vehicle-update",
+     *     summary="Update Vehicle Purpose",
+     *     tags={"vehicle-update-purpose"},
+     *     description="Update Vehicle Purpose.",
+     *     operationId="vehicle-update-purpose",
+     *     @OA\Parameter(
+     *         name="vehicle_id",
+     *         in="path",
+     *         description="Vehicle Id",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="number"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="vehicle_purpose",
+     *         in="path",
+     *         description="Vehicle Purpose",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="fuel_capacity",
+     *         in="path",
+     *         description="Fuel Congestion",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="number"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="vehicle_kpl",
+     *         in="path",
+     *         description="Milage",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="number"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="driver_id",
+     *         in="path",
+     *         description="Driver Id",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="number"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid user supplied"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="User not found"
+     *     )
+     * )
+     */
+    public function vehicleUpdate(Request $request): Response
+    {
+        $validator = validator(
+            $request->all(),
+            [
+                'vehicle_id'            => 'required|numeric|exists:vehicles,id',
+                'fuel_capacity'         => 'required|numeric',
+                'vehicle_kpl'           => 'required|numeric',
+                'driver_id'             => 'nullable|numeric|exists:users,id',
+            ],
+            [
+                'vehicle_id.required'       => 'Vehicle is Requried',
+                'vehicle_id.numeric'        => 'Provide Valid Vehicle',
+                'vehicle_id.exists'         => 'Provide Valid Vehicle',
+                'fuel_capacity.required'    => 'Fuel Congestion is Required',
+                'fuel_capacity.numeric'     => 'Provide Valid Fuel Congestion',
+                'vehicle_kpl.required'      => 'Milage is Required',
+                'vehicle_kpl.numeric'       => 'Provide Valid Milage',
+                'driver_id.numeric'         => 'Provide Valid Driver',
+                'driver_id.exists'          => 'Provide Valid Driver'
+            ]
+        );
+
+        if ($validator->fails()) :
+            return Response([
+                'status' => false,
+                'message' => $validator->getMessageBag()->first(),
+                'errors' => $validator->getMessageBag()
+            ], Response::HTTP_BAD_REQUEST);
+        else :
+            $data = Vehicle::where('customer_id', Auth::user()->id)->findOrFail($request->vehicle_id);
+
+            $data->fuel_capacity = $request->fuel_capacity;
+            $data->vehicle_kpl = $request->vehicle_kpl;
+            if ($request->filled('driver_id')) :
+                $data->driver_id = $request->driver_id;
+            endif;
+            if ($request->filled('vehicle_purpose')) :
+                $data->vehicle_purpose = $request->vehicle_purpose;
+            endif;
+            $data->save();
+
+            return Response([
+                'status'    => true,
+                'message'   => 'Driver Update Successfully',
+                'data'      => array(
+                    'id'                => $data->id,
+                    'vehicle_purpose'   => $data->vehicle_purpose,
+                    'fuel_capacity'     => $data->fuel_capacity,
+                    'vehicle_kpl'       => $data->vehicle_kpl,
+                    'driver_id'         => $data->driver_id,
+                )
+            ], Response::HTTP_CREATED);
+        endif;
+    }
 }
