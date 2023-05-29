@@ -486,6 +486,125 @@
                 ]
             }
         },
+        "/api/customer/customer-drivers/{id}": {
+            "put": {
+                "tags": [
+                    "customer-drivers-update"
+                ],
+                "summary": "Store Driver Info",
+                "description": "Update Driver.",
+                "operationId": "customer-drivers-update",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "path",
+                        "description": "Driver Email",
+                        "required": true,
+                        "schema": {
+                            "type": "email"
+                        }
+                    },
+                    {
+                        "name": "password",
+                        "in": "path",
+                        "description": "Driver Password",
+                        "required": false,
+                        "schema": {
+                            "type": "password"
+                        }
+                    },
+                    {
+                        "name": "phone_number",
+                        "in": "path",
+                        "description": "Driver Phone Number",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "phone_optional",
+                        "in": "path",
+                        "description": "Driver Optional Phone Number",
+                        "required": false,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "first_name",
+                        "in": "path",
+                        "description": "Driver First Name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "last_name",
+                        "in": "path",
+                        "description": "Driver Last Name",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "license_number",
+                        "in": "path",
+                        "description": "Driver License Number",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "license_expire_date",
+                        "in": "path",
+                        "description": "Driver License Expire Date",
+                        "required": false,
+                        "schema": {
+                            "type": "date"
+                        }
+                    },
+                    {
+                        "name": "driver_status",
+                        "in": "path",
+                        "description": "Driver Status in 0 or 1",
+                        "required": true,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "license_picture",
+                        "in": "path",
+                        "description": "License Image",
+                        "required": false,
+                        "schema": {
+                            "type": "file"
+                        }
+                    },
+                    {
+                        "name": "image",
+                        "in": "path",
+                        "description": "Driver Profile Image",
+                        "required": false,
+                        "schema": {
+                            "type": "file"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Invalid user supplied"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            }
+        },
         "/api/customer/vehicle-documents": {
             "post": {
                 "tags": [

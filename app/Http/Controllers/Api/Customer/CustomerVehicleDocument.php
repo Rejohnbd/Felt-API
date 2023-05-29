@@ -130,7 +130,6 @@ class CustomerVehicleDocument extends Controller
             DB::beginTransaction();
             try {
                 $customerId = Auth::user()->id;
-
                 for ($i = 0; $i < sizeof($uniqueArray); $i++) :
                     $newVehicleDocument = new VehicleDocument;
                     $newVehicleDocument->customer_id = $customerId;
@@ -139,16 +138,18 @@ class CustomerVehicleDocument extends Controller
                     $newVehicleDocument->expire_date        = $request->expire_date[$i];
 
                     $files = $request->file('document_image');
+                    if (!is_null($files)) :
+                        foreach ($files as $fileKey => $file) :
+                            if ($i == $fileKey) :
+                                $fileExtension = $file->extension();
+                                $fileName =  $request->expire_date[$i] . "_" . Str::random(5) . "_" . $request->vehicle_paper_id[$i] .  "_" . date('his') . '.' . $fileExtension;
+                                $folderpath = public_path() . '/vehicle_document';
+                                $file->move($folderpath, $fileName);
+                                $newVehicleDocument->document_image = '/vehicle_document/' . $fileName;
+                            endif;
+                        endforeach;
+                    endif;
 
-                    foreach ($files as $fileKey => $file) :
-                        if ($i == $fileKey) :
-                            $fileExtension = $file->extension();
-                            $fileName =  $request->expire_date[$i] . "_" . Str::random(5) . "_" . $request->vehicle_paper_id[$i] .  "_" . date('his') . '.' . $fileExtension;
-                            $folderpath = public_path() . '/vehicle_document';
-                            $file->move($folderpath, $fileName);
-                            $newVehicleDocument->document_image = '/vehicle_document/' . $fileName;
-                        endif;
-                    endforeach;
                     $newVehicleDocument->save();
                 endfor;
 

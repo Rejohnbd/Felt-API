@@ -187,7 +187,6 @@ class CustomerDriverController extends Controller
         $validator = validator(
             $request->all(),
             [
-                // 'vehicle_id'            => 'required|numeric|exists:vehicles,id',
                 'email'                 => 'required|email:rfc,dns|max:255|unique:users,email',
                 'password'              => 'required|string|min:8',
                 'phone_number'          => 'required|min:11|max:11|unique:users,phone_number',
@@ -200,9 +199,6 @@ class CustomerDriverController extends Controller
                 'driver_status'         => 'required|in:0,1'
             ],
             [
-                // 'vehicle_id.required'               => 'Vehicle Select Require',
-                // 'vehicle_id.numeric'                => 'Provide Valid Vehicle Info',
-                // 'vehicle_id.exists'                 => 'Provide Valid Vehicle Info',
                 'email.required'                    => 'Email is Require',
                 'email.email'                       => 'Provide Valid Email Address',
                 'email.max'                         => 'Provide Valid Email Address',
@@ -226,13 +222,6 @@ class CustomerDriverController extends Controller
                 'driver_status.in'                  => 'Provide Valid Driver Status',
             ]
         );
-
-        // $validator->after(function ($validator) use ($request) {
-        //     $exists = Vehicle::where('id', $request->vehicle_id)->where('customer_id', Auth::user()->id)->exists();
-        //     if (!$exists) :
-        //         $validator->errors()->add('vehicle_id', 'Vehicle Info & Customer Info not Match');
-        //     endif;
-        // });
 
         if ($validator->fails()) :
             return Response([
@@ -281,12 +270,6 @@ class CustomerDriverController extends Controller
                 endif;
 
                 $newUserDetails->save();
-
-                // Vehicle::where('id', $request->vehicle_id)
-                //     ->where('customer_id', Auth::user()->id)
-                //     ->update([
-                //         'driver_id' => $newUser->id
-                //     ]);
 
                 DB::commit();
 
@@ -356,26 +339,147 @@ class CustomerDriverController extends Controller
     /**
      * Update the specified resource in storage.
      */
+    /**
+     * @OA\Put(
+     *     path="/api/customer/customer-drivers/{id}",
+     *     summary="Store Driver Info",
+     *     tags={"customer-drivers-update"},
+     *     description="Update Driver.",
+     *     operationId="customer-drivers-update",
+     *     @OA\Parameter(
+     *         name="email",
+     *         in="path",
+     *         description="Driver Email",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="email"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="password",
+     *         in="path",
+     *         description="Driver Password",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="password"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="phone_number",
+     *         in="path",
+     *         description="Driver Phone Number",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="number"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="phone_optional",
+     *         in="path",
+     *         description="Driver Optional Phone Number",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="number"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="first_name",
+     *         in="path",
+     *         description="Driver First Name",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="last_name",
+     *         in="path",
+     *         description="Driver Last Name",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="license_number",
+     *         in="path",
+     *         description="Driver License Number",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="license_expire_date",
+     *         in="path",
+     *         description="Driver License Expire Date",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="date"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="driver_status",
+     *         in="path",
+     *         description="Driver Status in 0 or 1",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="boolean"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="license_picture",
+     *         in="path",
+     *         description="License Image",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="file"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="image",
+     *         in="path",
+     *         description="Driver Profile Image",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="file"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid user supplied"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="User not found"
+     *     )
+     * )
+     */
     public function update(Request $request, string $id): Response
     {
         $data = User::with('userDetails.vehicle')
             ->where('role_id', 5)
             ->where('created_by', Auth::user()->id)
             ->findOrFail($id);
-        // dd($request->all());
+
         $validator = validator(
             $request->all(),
             [
+                'email'                 => 'nullable|email:rfc,dns|max:255|unique:users,email,' . $data->id,
+                'password'              => 'nullable|string|min:8',
                 'phone_number'          => 'required|min:11|max:11|unique:users,phone_number,' . $data->id,
                 'phone_optional'        => 'nullable|min:11|max:11',
                 'first_name'            => 'required|string',
-                'license_number'        => 'required|unique:user_details,license_number',
+                'license_number'        => 'required|unique:user_details,license_number,' . $data->id,
                 'license_expire_date'   => 'nullable|date_format:Y-m-d',
                 'license_picture'       => 'nullable|mimes:jpeg,jpg,png',
                 'image'                 => 'nullable|mimes:jpeg,jpg,png',
                 'driver_status'         => 'required|in:0,1'
             ],
             [
+                'email.email'                       => 'Provide Valid email Address',
+                'email.unique'                      => 'Email Address Already Exists',
+                'password.min'                      => 'Password Minimum Length 8 digits',
                 'phone_number.required'             => 'Phone Number is Require',
                 'phone_number.min'                  => 'Phone Number not less than 11 digits',
                 'phone_number.max'                  => 'Phone Number not greater than 11 digits',
@@ -401,7 +505,75 @@ class CustomerDriverController extends Controller
                 'errors' => $validator->getMessageBag()
             ], Response::HTTP_BAD_REQUEST);
         else :
-            dd($request->all());
+
+            DB::beginTransaction();
+            try {
+                DB::commit();
+
+                $data->email         = $request->email;
+                $data->phone_number  = $request->phone_number;
+                if ($request->has('password')) :
+                    $data->password      = $request->password;
+                endif;
+                $data->user_status   = $request->driver_status;
+                $data->save();
+
+
+                $data->userDetails->first_name             = $request->first_name;
+                $data->userDetails->last_name              = $request->last_name;
+                $data->userDetails->phone_optional        = $request->phone_optional;
+                $data->userDetails->license_number        = $request->license_number;
+                $data->userDetails->license_expire_date   = $request->license_expire_date;
+
+                if ($request->hasFile('license_picture')) :
+                    if (!is_null($data->userDetails->license_picture)) :
+                        $image_path = public_path($data->userDetails->license_picture);
+                        if (file_exists($image_path)) :
+                            unlink($image_path);
+                        endif;
+                    endif;
+
+                    $file = $request->file('license_picture');
+                    $fileExtension = $request->license_picture->extension();
+                    $fileName = $data->email . "_" . Str::random(5) . "_" . date('his') . '.' . $fileExtension;
+                    $folderpath = public_path() . '/license';
+                    $file->move($folderpath, $fileName);
+                    $data->userDetails->license_picture = '/license/' . $fileName;
+                endif;
+
+                if ($request->hasFile('image')) :
+                    if ($data->userDetails->image != 'default.png') :
+                        $image_path = public_path($data->userDetails->image);
+                        if (file_exists($image_path)) :
+                            unlink($image_path);
+                        endif;
+                    endif;
+
+                    $file = $request->file('image');
+                    $fileExtension = $request->image->extension();
+                    $fileName = $data->email . "_" . Str::random(5) . "_" . date('his') . '.' . $fileExtension;
+                    $folderpath = public_path() . '/user_image';
+                    $file->move($folderpath, $fileName);
+                    $data->userDetails->image = '/user_image/' . $fileName;
+                endif;
+
+                $data->userDetails->save();
+
+                DB::commit();
+
+                return Response([
+                    'status'    => true,
+                    'message'   => 'Driver Update Successfully',
+                    'data'      => new SingleDriverResouce($data)
+                ], Response::HTTP_CREATED);
+            } catch (\Exception $e) {
+                DB::rollback();
+                return Response([
+                    'status'    => false,
+                    'message'   => $e->getMessage(),
+                    'errors'    => []
+                ], Response::HTTP_BAD_REQUEST);
+            }
         endif;
     }
 
