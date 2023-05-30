@@ -891,6 +891,111 @@
                 ]
             }
         },
+        "/api/customer/ccustomer-vehicles-alert-setting/id": {
+            "get": {
+                "tags": [
+                    "customer-vehicles-alert-setting"
+                ],
+                "summary": "Get Customer Vehicle Alert Info By Id",
+                "description": "",
+                "operationId": "customer-vehicles-alert-setting",
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": {
+                                        "type": "integer",
+                                        "format": "int32"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer token": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "customer-vehicles-alert-setting-update"
+                ],
+                "summary": "Update customer vehicle Alert info",
+                "description": "",
+                "operationId": "customer-vehicles-alert-setting-update",
+                "parameters": [
+                    {
+                        "name": "notification_status",
+                        "in": "path",
+                        "description": "Notification Status in (0/1)",
+                        "required": true,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "email_status",
+                        "in": "path",
+                        "description": "Email Status in (0/1)",
+                        "required": true,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "over_speed_alert_status",
+                        "in": "path",
+                        "description": "Over Speed Alert Status in (0/1)",
+                        "required": true,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "range_alert_status",
+                        "in": "path",
+                        "description": "Range Alert Status in (0/1)",
+                        "required": true,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "sms_alert_status",
+                        "in": "path",
+                        "description": "SMS Alert Status in (0/1)",
+                        "required": true,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": {
+                                        "type": "integer",
+                                        "format": "int32"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer token": []
+                    }
+                ]
+            }
+        },
         "/api/customer/profile": {
             "get": {
                 "tags": [

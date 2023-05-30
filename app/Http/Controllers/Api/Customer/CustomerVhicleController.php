@@ -366,4 +366,168 @@ class CustomerVhicleController extends Controller
             ], Response::HTTP_CREATED);
         endif;
     }
+
+    /**
+     * @OA\Get(
+     *     path="/api/customer/ccustomer-vehicles-alert-setting/id",
+     *     tags={"customer-vehicles-alert-setting"},
+     *     summary="Get Customer Vehicle Alert Info By Id",
+     *     description="",
+     *     operationId="customer-vehicles-alert-setting",
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation",
+     *         @OA\JsonContent(
+     *             @OA\AdditionalProperties(
+     *                 type="integer",
+     *                 format="int32"
+     *             )
+     *         )
+     *     ),
+     *     security={
+     *         {"Bearer token": {}}
+     *     }
+     * )
+     */
+    public function vehicleAlertSetting(string $id): Response
+    {
+        $data = Vehicle::where('customer_id', Auth::user()->id)->findOrFail($id);
+
+        return Response([
+            'status'    => true,
+            'message'   => 'Customer Vehicle Alert Seeting',
+            'data'      => array(
+                'id'                        => $data->id,
+                'notification_status'       => $data->notification_status,
+                'email_status'              => $data->email_status,
+                'over_speed_alert_status'   => $data->over_speed_alert_status,
+                'range_alert_status'        => $data->range_alert_status,
+                'sms_alert_status'          => $data->sms_alert_status,
+            )
+        ], Response::HTTP_OK);
+    }
+
+    /**
+     * @OA\Put(
+     *     path="/api/customer/ccustomer-vehicles-alert-setting/id",
+     *     tags={"customer-vehicles-alert-setting-update"},
+     *     summary="Update customer vehicle Alert info",
+     *     description="",
+     *     operationId="customer-vehicles-alert-setting-update",
+     *     @OA\Parameter(
+     *         name="notification_status",
+     *         in="path",
+     *         description="Notification Status in (0/1)",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="boolean"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="email_status",
+     *         in="path",
+     *         description="Email Status in (0/1)",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="boolean"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="over_speed_alert_status",
+     *         in="path",
+     *         description="Over Speed Alert Status in (0/1)",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="boolean"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="range_alert_status",
+     *         in="path",
+     *         description="Range Alert Status in (0/1)",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="boolean"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="sms_alert_status",
+     *         in="path",
+     *         description="SMS Alert Status in (0/1)",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="boolean"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation",
+     *         @OA\JsonContent(
+     *             @OA\AdditionalProperties(
+     *                 type="integer",
+     *                 format="int32"
+     *             )
+     *         )
+     *     ),
+     *     security={
+     *         {"Bearer token": {}}
+     *     }
+     * )
+     */
+    public function vehicleAlertSettingUpdate(Request $request, string $id)
+    {
+        $validator = validator(
+            $request->all(),
+            [
+                'notification_status'       => 'required|numeric|in:0,1',
+                'email_status'              => 'required|numeric|in:0,1',
+                'over_speed_alert_status'   => 'required|numeric|in:0,1',
+                'range_alert_status'        => 'required|numeric|in:0,1',
+                'sms_alert_status'          => 'required|numeric|in:0,1',
+            ],
+            [
+                'notification_status.required'      => 'Notification Status is Required',
+                'notification_status.numeric'       => 'Provide Valid Notification Status',
+                'notification_status.in'            => 'Provide Valid Notification Status',
+                'email_status.required'             => 'Email Status is Required',
+                'email_status.numeric'              => 'Provide Valid Email Status',
+                'email_status.in'                   => 'Provide Valid Email Status',
+                'over_speed_alert_status.required'  => 'Over Speed Alert Status is Required',
+                'over_speed_alert_status.numeric'   => 'Provide Valid Over Speed Alert Status',
+                'over_speed_alert_status.in'        => 'Provide Valid Over Speed Alert Status',
+                'sms_alert_status.required'         => 'SMS Alert Status is Required',
+                'sms_alert_status.numeric'          => 'Provide Valid SMS Alert Status',
+                'sms_alert_status.in'               => 'Provide Valid SMS Alert Status',
+            ]
+        );
+        if ($validator->fails()) :
+            return Response([
+                'status' => false,
+                'message' => $validator->getMessageBag()->first(),
+                'errors' => $validator->getMessageBag()
+            ], Response::HTTP_BAD_REQUEST);
+        else :
+            $data = Vehicle::where('customer_id', Auth::user()->id)->findOrFail($id);
+
+            $data->notification_status      = $request->notification_status;
+            $data->email_status             = $request->email_status;
+            $data->over_speed_alert_status  = $request->over_speed_alert_status;
+            $data->range_alert_status       = $request->range_alert_status;
+            $data->sms_alert_status         = $request->sms_alert_status;
+            $data->save();
+
+            return Response([
+                'status'    => true,
+                'message'   => 'Customer Vehicle Speed Info',
+                'data'      => array(
+                    'id'                        => $data->id,
+                    'notification_status'       => $data->notification_status,
+                    'email_status'              => $data->email_status,
+                    'over_speed_alert_status'   => $data->over_speed_alert_status,
+                    'range_alert_status'        => $data->range_alert_status,
+                    'sms_alert_status'          => $data->sms_alert_status,
+                )
+            ], Response::HTTP_CREATED);
+        endif;
+    }
 }

@@ -57,6 +57,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('vehicle-update', [CustomerVhicleController::class, 'vehicleUpdate']);
         Route::get('customer-vehicles-speed-limitation/{id}', [CustomerVhicleController::class, 'speedLimitation']);
         Route::put('customer-vehicles-speed-limitation/{id}', [CustomerVhicleController::class, 'speedLimitationUpdate']);
+        Route::get('customer-vehicles-alert-setting/{id}', [CustomerVhicleController::class, 'vehicleAlertSetting']);
+        Route::put('customer-vehicles-alert-setting/{id}', [CustomerVhicleController::class, 'vehicleAlertSettingUpdate']);
         Route::apiResource('customer-drivers', CustomerDriverController::class);
         Route::apiResource('vehicle-documents', CustomerVehicleDocument::class);
     });
