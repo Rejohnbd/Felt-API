@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class CustomerDriverController extends Controller
@@ -238,7 +239,7 @@ class CustomerDriverController extends Controller
                 $newUser->role_id       = 5;
                 $newUser->email         = $request->email;
                 $newUser->phone_number  = $request->phone_number;
-                $newUser->password      = $request->password;
+                $newUser->password      = Hash::make($request->password);
                 $newUser->user_status   = $request->driver_status;
                 $newUser->created_by    = Auth::user()->id;
                 $newUser->save();
@@ -513,7 +514,7 @@ class CustomerDriverController extends Controller
                 $data->email         = $request->email;
                 $data->phone_number  = $request->phone_number;
                 if ($request->has('password')) :
-                    $data->password      = $request->password;
+                    $data->password      = Hash::make($request->password);
                 endif;
                 $data->user_status   = $request->driver_status;
                 $data->save();
