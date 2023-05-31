@@ -689,6 +689,192 @@
                 }
             }
         },
+        "/api/customer/vehicle-expenses": {
+            "get": {
+                "tags": [
+                    "vehicle-expenses"
+                ],
+                "summary": "Returns Customer All Vehicle Expenses",
+                "description": "Returns Customer All Vehicle Expenses",
+                "operationId": "vehicle-expenses",
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": {
+                                        "type": "integer",
+                                        "format": "int32"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "vehicle-expenses-store"
+                ],
+                "summary": "Store Vehicle Expense",
+                "description": "Store Vehicle Expenses.",
+                "operationId": "vehicle-expenses-store",
+                "parameters": [
+                    {
+                        "name": "vehicle_id",
+                        "in": "path",
+                        "description": "Vehicle Id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "amount",
+                        "in": "path",
+                        "description": "Amount",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "time",
+                        "in": "path",
+                        "description": "Time",
+                        "required": false,
+                        "schema": {
+                            "type": "time"
+                        }
+                    },
+                    {
+                        "name": "created_by",
+                        "in": "path",
+                        "description": "Person Id",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "purpose",
+                        "in": "path",
+                        "description": "Purpose",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Invalid user supplied"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            }
+        },
+        "/api/customer/vehicle-expenses/id": {
+            "get": {
+                "tags": [
+                    "vehicle-expenses-single"
+                ],
+                "summary": "Get Perticual Expesse",
+                "description": "",
+                "operationId": "vehicle-expenses-single",
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": {
+                                        "type": "integer",
+                                        "format": "int32"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "vehicle-expenses-update"
+                ],
+                "summary": "Store Vehicle Expense",
+                "description": "Store Vehicle Expenses.",
+                "operationId": "vehicle-expenses-update",
+                "parameters": [
+                    {
+                        "name": "vehicle_id",
+                        "in": "path",
+                        "description": "Vehicle Id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "amount",
+                        "in": "path",
+                        "description": "Amount",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "time",
+                        "in": "path",
+                        "description": "Time",
+                        "required": false,
+                        "schema": {
+                            "type": "time"
+                        }
+                    },
+                    {
+                        "name": "created_by",
+                        "in": "path",
+                        "description": "Person Id",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "purpose",
+                        "in": "path",
+                        "description": "Purpose",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Invalid user supplied"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            }
+        },
         "/api/customer/customer-vehicles": {
             "get": {
                 "tags": [
