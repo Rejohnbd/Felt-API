@@ -143,13 +143,16 @@ class CustomerVehicleExpenseController extends Controller
             ]
         );
 
-        $validator->after(function ($validator) use ($request) {
-            $allDivers = User::where('role_id', 5)->where('created_by', Auth::user()->id)->pluck('id')->toArray();
-            array_push($allDivers, Auth::user()->id);
-            if (!Vehicle::where('id', $request->vehicle_id)->whereIn('driver_id', $allDivers)->exists()) {
-                $validator->errors()->add('created_by', 'Provide Valid Person');
-            }
-        });
+        if ($request->filled('created_by')) :
+            $validator->after(function ($validator) use ($request) {
+                $allDivers = User::where('role_id', 5)->where('created_by', Auth::user()->id)->pluck('id')->toArray();
+                array_push($allDivers, Auth::user()->id);
+                if (!in_array($request->created_by, $allDivers)) {
+                    $validator->errors()->add('created_by', 'Provide Valid Person');
+                }
+            });
+        endif;
+
 
         if ($validator->fails()) :
             return Response([
@@ -166,8 +169,11 @@ class CustomerVehicleExpenseController extends Controller
             $newExpense->amount         = $request->amount;
             $newExpense->purpose        = $request->purpose;
             $newExpense->time           = $request->time;
-            $newExpense->created_by     = $request->has('created_by') ?? $request->created_by;
+            if ($request->filled('created_by')) :
+                $newExpense->created_by = $request->created_by;
+            endif;
             $newExpense->save();
+            $newExpense->load('createdBy');
 
             return Response([
                 'status'    => true,
@@ -308,13 +314,15 @@ class CustomerVehicleExpenseController extends Controller
             ]
         );
 
-        $validator->after(function ($validator) use ($request) {
-            $allDivers = User::where('role_id', 5)->where('created_by', Auth::user()->id)->pluck('id')->toArray();
-            array_push($allDivers, Auth::user()->id);
-            if (!Vehicle::where('id', $request->vehicle_id)->whereIn('driver_id', $allDivers)->exists()) {
-                $validator->errors()->add('created_by', 'Provide Valid Person');
-            }
-        });
+        if ($request->filled('created_by')) :
+            $validator->after(function ($validator) use ($request) {
+                $allDivers = User::where('role_id', 5)->where('created_by', Auth::user()->id)->pluck('id')->toArray();
+                array_push($allDivers, Auth::user()->id);
+                if (!in_array($request->created_by, $allDivers)) {
+                    $validator->errors()->add('created_by', 'Provide Valid Person');
+                }
+            });
+        endif;
 
         if ($validator->fails()) :
             return Response([
@@ -328,8 +336,11 @@ class CustomerVehicleExpenseController extends Controller
             $data->amount         = $request->amount;
             $data->purpose        = $request->purpose;
             $data->time           = $request->time;
-            $data->created_by     = $request->has('created_by') ?? $request->created_by;
+            if ($request->filled('created_by')) :
+                $data->created_by = $request->created_by;
+            endif;
             $data->save();
+            $data->load('createdBy');
 
             return Response([
                 'status'    => true,

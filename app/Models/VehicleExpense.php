@@ -20,6 +20,11 @@ class VehicleExpense extends Model
         return $this->belongsTo(Vehicle::class);
     }
 
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by', 'id');
+    }
+
     public function getCreatedAtAttribute($date)
     {
         return Carbon::parse($date)->format('Y-m-d');
