@@ -1036,8 +1036,10 @@
                         "Bearer token": []
                     }
                 ]
-            },
-            "put": {
+            }
+        },
+        "/api/customer/customer-vehicles-speed-limitation": {
+            "post": {
                 "tags": [
                     "customer-vehicles-speed-limitation-update"
                 ],
@@ -1046,7 +1048,16 @@
                 "operationId": "customer-vehicles-speed-limitation-update",
                 "parameters": [
                     {
-                        "name": "speed_limitation",
+                        "name": "vehicle_id[]",
+                        "in": "path",
+                        "description": "Vehicle Id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "speed_limitation[]",
                         "in": "path",
                         "description": "Speed Limitation",
                         "required": true,

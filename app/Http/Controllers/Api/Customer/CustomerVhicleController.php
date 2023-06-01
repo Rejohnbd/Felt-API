@@ -304,14 +304,23 @@ class CustomerVhicleController extends Controller
     }
 
     /**
-     * @OA\Put(
-     *     path="/api/customer/customer-vehicles-speed-limitation/id",
+     * @OA\Post(
+     *     path="/api/customer/customer-vehicles-speed-limitation",
      *     tags={"customer-vehicles-speed-limitation-update"},
      *     summary="Update customer vehicle speed info",
      *     description="",
      *     operationId="customer-vehicles-speed-limitation-update",
      *     @OA\Parameter(
-     *         name="speed_limitation",
+     *         name="vehicle_id[]",
+     *         in="path",
+     *         description="Vehicle Id",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="speed_limitation[]",
      *         in="path",
      *         description="Speed Limitation",
      *         required=true,
@@ -334,18 +343,38 @@ class CustomerVhicleController extends Controller
      *     }
      * )
      */
-    public function speedLimitationUpdate(Request $request, string $id): Response
+    public function speedLimitationUpdate(Request $request): Response
     {
         $validator = validator(
             $request->all(),
             [
-                'speed_limitation'      => 'required|numeric',
+                'vehicle_id.*'          => 'required|numeric|exists:vehicles,id',
+                'speed_limitation.*'    => 'required|numeric',
             ],
             [
-                'speed_limitation.required' => 'Speed Limitation is Required',
-                'speed_limitation.numeric'  => 'Provide Valid Speed Limitation'
+                'vehicle_id.*.required'         => 'Vehicle is Required',
+                'vehicle_id.*.numeric'          => 'Provide Valid Vehicle info',
+                'vehicle_id.*.exists'           => 'Provide Valid Vehicle info',
+                'speed_limitation.*.required'   => 'Speed Limitation is Required',
+                'speed_limitation.*.numeric'    => 'Provide Valid Speed Limitation'
             ]
         );
+
+        $validator->after(function ($validator) use ($request) {
+            if (sizeof($request->vehicle_id) != sizeof($request->speed_limitation)) {
+                $validator->errors()->add('vehicle_id', 'Vehicle & Speed Limitation is not same');
+            }
+        });
+
+        $validator->after(function ($validator) use ($request) {
+            $allVehicles = Vehicle::where('customer_id', Auth::user()->id)->pluck('id')->toArray();
+            foreach ($request->vehicle_id as $vchlId) :
+                if (!in_array($vchlId, $allVehicles)) :
+                    $validator->errors()->add('vehicle_id', 'Vehicle & Speed Limitation is not same');
+                endif;
+            endforeach;
+        });
+
         if ($validator->fails()) :
             return Response([
                 'status' => false,
@@ -353,16 +382,20 @@ class CustomerVhicleController extends Controller
                 'errors' => $validator->getMessageBag()
             ], Response::HTTP_BAD_REQUEST);
         else :
-            $data = Vehicle::select('id', 'speed_limitation')->where('customer_id', Auth::user()->id)->findOrFail($id);
-            $data->speed_limitation = $request->speed_limitation;
-            $data->save();
+            $updatedVehicleIds =  $request->vehicle_id;
+            $updatedData = array();
+            foreach ($updatedVehicleIds as $key => $vehicleId) :
+                $data = Vehicle::select('id', 'speed_limitation')->where('customer_id', Auth::user()->id)->findOrFail($vehicleId);
+                $data->speed_limitation = $request->speed_limitation[$key];
+                $data->save();
+                array_push($updatedData, $data);
+            endforeach;
+
+
             return Response([
                 'status'    => true,
                 'message'   => 'Customer Vehicle Speed Info',
-                'data'      => array(
-                    'id'                => $data->id,
-                    'speed_limitation'  => $data->speed_limitation,
-                )
+                'data'      => $updatedData
             ], Response::HTTP_CREATED);
         endif;
     }
