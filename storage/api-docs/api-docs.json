@@ -1116,8 +1116,10 @@
                         "Bearer token": []
                     }
                 ]
-            },
-            "put": {
+            }
+        },
+        "/api/customer/ccustomer-vehicles-alert-setting": {
+            "post": {
                 "tags": [
                     "customer-vehicles-alert-setting-update"
                 ],
@@ -1126,7 +1128,16 @@
                 "operationId": "customer-vehicles-alert-setting-update",
                 "parameters": [
                     {
-                        "name": "notification_status",
+                        "name": "vehicle_id[]",
+                        "in": "path",
+                        "description": "Vehicle Id",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "notification_status[]",
                         "in": "path",
                         "description": "Notification Status in (0/1)",
                         "required": true,
@@ -1135,7 +1146,7 @@
                         }
                     },
                     {
-                        "name": "email_status",
+                        "name": "email_status[]",
                         "in": "path",
                         "description": "Email Status in (0/1)",
                         "required": true,
@@ -1144,7 +1155,7 @@
                         }
                     },
                     {
-                        "name": "over_speed_alert_status",
+                        "name": "over_speed_alert_status[]",
                         "in": "path",
                         "description": "Over Speed Alert Status in (0/1)",
                         "required": true,
@@ -1153,7 +1164,7 @@
                         }
                     },
                     {
-                        "name": "range_alert_status",
+                        "name": "range_alert_status[]",
                         "in": "path",
                         "description": "Range Alert Status in (0/1)",
                         "required": true,
@@ -1162,7 +1173,7 @@
                         }
                     },
                     {
-                        "name": "sms_alert_status",
+                        "name": "sms_alert_status[]",
                         "in": "path",
                         "description": "SMS Alert Status in (0/1)",
                         "required": true,

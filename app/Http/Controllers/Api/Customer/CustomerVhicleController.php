@@ -370,7 +370,7 @@ class CustomerVhicleController extends Controller
             $allVehicles = Vehicle::where('customer_id', Auth::user()->id)->pluck('id')->toArray();
             foreach ($request->vehicle_id as $vchlId) :
                 if (!in_array($vchlId, $allVehicles)) :
-                    $validator->errors()->add('vehicle_id', 'Vehicle & Speed Limitation is not same');
+                    $validator->errors()->add('vehicle_id', 'Few Vehicle is not under this Customer');
                 endif;
             endforeach;
         });
@@ -441,14 +441,23 @@ class CustomerVhicleController extends Controller
     }
 
     /**
-     * @OA\Put(
-     *     path="/api/customer/ccustomer-vehicles-alert-setting/id",
+     * @OA\Post(
+     *     path="/api/customer/ccustomer-vehicles-alert-setting",
      *     tags={"customer-vehicles-alert-setting-update"},
      *     summary="Update customer vehicle Alert info",
      *     description="",
      *     operationId="customer-vehicles-alert-setting-update",
+     *      @OA\Parameter(
+     *         name="vehicle_id[]",
+     *         in="path",
+     *         description="Vehicle Id",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="number"
+     *         )
+     *     ),
      *     @OA\Parameter(
-     *         name="notification_status",
+     *         name="notification_status[]",
      *         in="path",
      *         description="Notification Status in (0/1)",
      *         required=true,
@@ -457,7 +466,7 @@ class CustomerVhicleController extends Controller
      *         )
      *     ),
      *     @OA\Parameter(
-     *         name="email_status",
+     *         name="email_status[]",
      *         in="path",
      *         description="Email Status in (0/1)",
      *         required=true,
@@ -466,7 +475,7 @@ class CustomerVhicleController extends Controller
      *         )
      *     ),
      *     @OA\Parameter(
-     *         name="over_speed_alert_status",
+     *         name="over_speed_alert_status[]",
      *         in="path",
      *         description="Over Speed Alert Status in (0/1)",
      *         required=true,
@@ -475,7 +484,7 @@ class CustomerVhicleController extends Controller
      *         )
      *     ),
      *     @OA\Parameter(
-     *         name="range_alert_status",
+     *         name="range_alert_status[]",
      *         in="path",
      *         description="Range Alert Status in (0/1)",
      *         required=true,
@@ -484,7 +493,7 @@ class CustomerVhicleController extends Controller
      *         )
      *     ),
      *     @OA\Parameter(
-     *         name="sms_alert_status",
+     *         name="sms_alert_status[]",
      *         in="path",
      *         description="SMS Alert Status in (0/1)",
      *         required=true,
@@ -507,32 +516,57 @@ class CustomerVhicleController extends Controller
      *     }
      * )
      */
-    public function vehicleAlertSettingUpdate(Request $request, string $id)
+    public function vehicleAlertSettingUpdate(Request $request)
     {
         $validator = validator(
             $request->all(),
             [
-                'notification_status'       => 'required|numeric|in:0,1',
-                'email_status'              => 'required|numeric|in:0,1',
-                'over_speed_alert_status'   => 'required|numeric|in:0,1',
-                'range_alert_status'        => 'required|numeric|in:0,1',
-                'sms_alert_status'          => 'required|numeric|in:0,1',
+                'vehicel_id.*'              => 'required|numeric|exists:vehicles,id',
+                'notification_status.*'     => 'required|numeric|in:0,1',
+                'email_status.*'            => 'required|numeric|in:0,1',
+                'over_speed_alert_status.*' => 'required|numeric|in:0,1',
+                'range_alert_status.*'      => 'required|numeric|in:0,1',
+                'sms_alert_status.*'        => 'required|numeric|in:0,1',
             ],
             [
-                'notification_status.required'      => 'Notification Status is Required',
-                'notification_status.numeric'       => 'Provide Valid Notification Status',
-                'notification_status.in'            => 'Provide Valid Notification Status',
-                'email_status.required'             => 'Email Status is Required',
-                'email_status.numeric'              => 'Provide Valid Email Status',
-                'email_status.in'                   => 'Provide Valid Email Status',
-                'over_speed_alert_status.required'  => 'Over Speed Alert Status is Required',
-                'over_speed_alert_status.numeric'   => 'Provide Valid Over Speed Alert Status',
-                'over_speed_alert_status.in'        => 'Provide Valid Over Speed Alert Status',
-                'sms_alert_status.required'         => 'SMS Alert Status is Required',
-                'sms_alert_status.numeric'          => 'Provide Valid SMS Alert Status',
-                'sms_alert_status.in'               => 'Provide Valid SMS Alert Status',
+                'vehicel_id.*.required'                 => 'Vehicle Info Required',
+                'vehicel_id.*.numeric'                  => 'Provide Valid Vehicle Info',
+                'vehicel_id.*.exists'                   => 'Provide Valid Vehicle Info',
+                'notification_status.*.required'        => 'Notification Status is Required',
+                'notification_status.*.numeric'         => 'Provide Valid Notification Status',
+                'notification_status.*.in'              => 'Provide Valid Notification Status',
+                'email_status.*.required'               => 'Email Status is Required',
+                'email_status.*.numeric'                => 'Provide Valid Email Status',
+                'email_status.*.in'                     => 'Provide Valid Email Status',
+                'over_speed_alert_status.*.required'    => 'Over Speed Alert Status is Required',
+                'over_speed_alert_status.*.numeric'     => 'Provide Valid Over Speed Alert Status',
+                'over_speed_alert_status.*.in'          => 'Provide Valid Over Speed Alert Status',
+                'sms_alert_status.*.required'           => 'SMS Alert Status is Required',
+                'sms_alert_status.*.numeric'            => 'Provide Valid SMS Alert Status',
+                'sms_alert_status.*.in'                 => 'Provide Valid SMS Alert Status',
             ]
         );
+
+        $validator->after(function ($validator) use ($request) {
+            if (
+                (sizeof($request->vehicle_id) != sizeof($request->notification_status)) ||
+                (sizeof($request->vehicle_id) != sizeof($request->email_status)) ||
+                (sizeof($request->vehicle_id) != sizeof($request->over_speed_alert_status)) ||
+                (sizeof($request->vehicle_id) != sizeof($request->sms_alert_status))
+            ) {
+                $validator->errors()->add('vehicle_id', 'Vehicle Info & Other Info are not same');
+            }
+        });
+
+        $validator->after(function ($validator) use ($request) {
+            $allVehicles = Vehicle::where('customer_id', Auth::user()->id)->pluck('id')->toArray();
+            foreach ($request->vehicle_id as $vchlId) :
+                if (!in_array($vchlId, $allVehicles)) :
+                    $validator->errors()->add('vehicle_id', 'Few Vehicle is not under this Customer');
+                endif;
+            endforeach;
+        });
+
         if ($validator->fails()) :
             return Response([
                 'status' => false,
@@ -540,26 +574,24 @@ class CustomerVhicleController extends Controller
                 'errors' => $validator->getMessageBag()
             ], Response::HTTP_BAD_REQUEST);
         else :
-            $data = Vehicle::where('customer_id', Auth::user()->id)->findOrFail($id);
+            $updatedVehicleIds =  $request->vehicle_id;
+            $updatedData = array();
 
-            $data->notification_status      = $request->notification_status;
-            $data->email_status             = $request->email_status;
-            $data->over_speed_alert_status  = $request->over_speed_alert_status;
-            $data->range_alert_status       = $request->range_alert_status;
-            $data->sms_alert_status         = $request->sms_alert_status;
-            $data->save();
+            foreach ($updatedVehicleIds as $key => $vehicleId) :
+                $data = Vehicle::select('id', 'notification_status', 'email_status', 'over_speed_alert_status', 'range_alert_status', 'sms_alert_status')->where('customer_id', Auth::user()->id)->findOrFail($vehicleId);
+                $data->notification_status      = $request->notification_status[$key];
+                $data->email_status             = $request->email_status[$key];
+                $data->over_speed_alert_status  = $request->over_speed_alert_status[$key];
+                $data->range_alert_status       = $request->range_alert_status[$key];
+                $data->sms_alert_status         = $request->sms_alert_status[$key];
+                $data->save();
+                array_push($updatedData, $data);
+            endforeach;
 
             return Response([
                 'status'    => true,
                 'message'   => 'Customer Vehicle Speed Info',
-                'data'      => array(
-                    'id'                        => $data->id,
-                    'notification_status'       => $data->notification_status,
-                    'email_status'              => $data->email_status,
-                    'over_speed_alert_status'   => $data->over_speed_alert_status,
-                    'range_alert_status'        => $data->range_alert_status,
-                    'sms_alert_status'          => $data->sms_alert_status,
-                )
+                'data'      => $updatedData
             ], Response::HTTP_CREATED);
         endif;
     }
