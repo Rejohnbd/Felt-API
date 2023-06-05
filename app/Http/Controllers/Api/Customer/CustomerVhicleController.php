@@ -595,4 +595,36 @@ class CustomerVhicleController extends Controller
             ], Response::HTTP_CREATED);
         endif;
     }
+
+    /**
+     * @OA\Get(
+     *     path="/api/customer/customer-vehicles-speed-alert-setting",
+     *     tags={"customer-vehicles-speed-alert-setting"},
+     *     summary="Get Customer Vehicle Speed & Alert Info",
+     *     description="",
+     *     operationId="customer-vehicles-speed-alert-setting",
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation",
+     *         @OA\JsonContent(
+     *             @OA\AdditionalProperties(
+     *                 type="integer",
+     *                 format="int32"
+     *             )
+     *         )
+     *     ),
+     *     security={
+     *         {"Bearer token": {}}
+     *     }
+     * )
+     */
+    public function vehicleSpeedSetting()
+    {
+        $data = Vehicle::select('id', 'registration_number', 'speed_limitation', 'notification_status', 'email_status', 'over_speed_alert_status', 'range_alert_status', 'sms_alert_status')->where('customer_id', Auth::user()->id)->get();
+        return Response([
+            'status'    => true,
+            'message'   => 'Customer Vehicle Alert Seeting',
+            'data'      => $data
+        ], Response::HTTP_OK);
+    }
 }
