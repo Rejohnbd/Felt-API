@@ -18,4 +18,9 @@ class Device extends Model
     {
         return $this->hasOne(DeviceType::class, 'id', 'device_type_id');
     }
+
+    public function vehicle()
+    {
+        return $this->hasOne(Vehicle::class);
+    }
 }

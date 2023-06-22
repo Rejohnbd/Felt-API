@@ -13,8 +13,10 @@ use App\Http\Controllers\Api\Customer\CustomerVhicleController;
 use App\Http\Controllers\Api\Customer\CustomerVehicleDocument;
 use App\Http\Controllers\Api\Customer\CustomerVehicleExpenseController;
 use App\Http\Controllers\Api\Customer\DashboardController;
+use App\Http\Controllers\Api\DeviceDataController;
 use App\Http\Controllers\Api\TestController;
 use App\Http\Controllers\Api\VehiclePaperController;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -68,4 +70,5 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 });
 
+Route::post('device-data', [DeviceDataController::class, 'saveDeviceData']);
 Route::post('request-data', [TestController::class, 'requestData']);
