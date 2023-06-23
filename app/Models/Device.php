@@ -23,4 +23,9 @@ class Device extends Model
     {
         return $this->hasOne(Vehicle::class);
     }
+
+    public function deviceLatestData()
+    {
+        return $this->hasOne(DeviceData::class, 'device_id', 'id')->latest();
+    }
 }

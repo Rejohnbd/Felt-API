@@ -18,6 +18,8 @@ class DeviceData extends Model
         'engine_status',
         'rotation',
         'speed',
+        'distance',
+        'fuel_use',
         'device_time',
         'json_data'
     ];
