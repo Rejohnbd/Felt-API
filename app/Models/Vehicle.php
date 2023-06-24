@@ -42,4 +42,9 @@ class Vehicle extends Model
     {
         return $this->hasMany(VehicleDocument::class);
     }
+
+    public function vehicleLatestData()
+    {
+        return $this->hasOne(DeviceData::class, 'vehicle_id', 'id')->latest();
+    }
 }

@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\Customer\CustomerDriverController;
 use App\Http\Controllers\Api\Customer\CustomerVhicleController;
 use App\Http\Controllers\Api\Customer\CustomerVehicleDocument;
 use App\Http\Controllers\Api\Customer\CustomerVehicleExpenseController;
+use App\Http\Controllers\Api\Customer\CustomerVehicleReportController;
 use App\Http\Controllers\Api\Customer\DashboardController;
 use App\Http\Controllers\Api\DeviceDataController;
 use App\Http\Controllers\Api\TestController;
@@ -67,6 +68,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('customer-drivers', CustomerDriverController::class);
         Route::apiResource('vehicle-documents', CustomerVehicleDocument::class);
         Route::apiResource('vehicle-expenses', CustomerVehicleExpenseController::class);
+        Route::get('live-tracking', [CustomerVehicleReportController::class, 'liveTracking']);
     });
 });
 

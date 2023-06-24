@@ -875,6 +875,44 @@
                 }
             }
         },
+        "/api/customer/live-tracking": {
+            "get": {
+                "tags": [
+                    "live-tracking"
+                ],
+                "summary": "Returns all vehicle live tracking Info",
+                "description": "",
+                "operationId": "live-tracking",
+                "parameters": [
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "description": "shortList",
+                        "required": false
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": {
+                                        "type": "integer",
+                                        "format": "int32"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer token": []
+                    }
+                ]
+            }
+        },
         "/api/customer/customer-vehicles": {
             "get": {
                 "tags": [
