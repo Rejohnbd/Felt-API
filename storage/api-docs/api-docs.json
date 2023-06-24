@@ -913,6 +913,44 @@
                 ]
             }
         },
+        "/api/customer/daily-route": {
+            "post": {
+                "tags": [
+                    "daily-route"
+                ],
+                "summary": "Vehicle Daily Route",
+                "description": "Show Daily Vehicle Route.",
+                "operationId": "daily-route",
+                "parameters": [
+                    {
+                        "name": "vehicle_id",
+                        "in": "path",
+                        "description": "Vehicle Id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "date",
+                        "in": "path",
+                        "description": "Report Date",
+                        "required": true,
+                        "schema": {
+                            "type": "date"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Invalid user supplied"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            }
+        },
         "/api/customer/customer-vehicles": {
             "get": {
                 "tags": [

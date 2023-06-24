@@ -69,6 +69,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('vehicle-documents', CustomerVehicleDocument::class);
         Route::apiResource('vehicle-expenses', CustomerVehicleExpenseController::class);
         Route::get('live-tracking', [CustomerVehicleReportController::class, 'liveTracking']);
+        Route::post('daily-route', [CustomerVehicleReportController::class, 'dailyRoute']);
     });
 });
 
