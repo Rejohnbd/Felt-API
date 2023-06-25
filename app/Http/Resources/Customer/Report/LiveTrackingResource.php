@@ -19,6 +19,7 @@ class LiveTrackingResource extends JsonResource
             'registration_number'   => $this->registration_number,
             'vehicle_brand'         => $this->vehicle_brand,
             'vehicle_purpose'       => $this->vehicle_purpose,
+            'device_imei'           => $this->vehicleLatestData ? $this->vehicleLatestData->device_imei : null,
             'vehicle_type_name'     => $this->vehicleType->vehicle_type_name,
             'driver_first_name'     => $this->driverInfo->userDetails->first_name,
             'driver_last_name'      => $this->driverInfo->userDetails->last_name,
