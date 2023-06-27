@@ -70,6 +70,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('vehicle-expenses', CustomerVehicleExpenseController::class);
         Route::get('live-tracking', [CustomerVehicleReportController::class, 'liveTracking']);
         Route::post('daily-route', [CustomerVehicleReportController::class, 'dailyRoute']);
+        Route::post('daily-report', [CustomerVehicleReportController::class, 'dailyReport']);
     });
 });
 

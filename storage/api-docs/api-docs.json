@@ -951,6 +951,44 @@
                 }
             }
         },
+        "/api/customer/daily-report": {
+            "post": {
+                "tags": [
+                    "daily-report"
+                ],
+                "summary": "Vehicle Daily Report",
+                "description": "Show Daily Vehicle Report.",
+                "operationId": "daily-report",
+                "parameters": [
+                    {
+                        "name": "vehicle_id",
+                        "in": "path",
+                        "description": "Vehicle Id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "date",
+                        "in": "path",
+                        "description": "Report Date",
+                        "required": true,
+                        "schema": {
+                            "type": "date"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Invalid user supplied"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            }
+        },
         "/api/customer/customer-vehicles": {
             "get": {
                 "tags": [

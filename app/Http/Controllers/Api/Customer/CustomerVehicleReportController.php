@@ -6,12 +6,16 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Customer\Report\LiveTrackingResource;
 use App\Models\DeviceData;
 use App\Models\Vehicle;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
 class CustomerVehicleReportController extends Controller
 {
+    private $time_span = [
+        '00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'
+    ];
     /**
      * @OA\Get(
      *     path="/api/customer/live-tracking",
@@ -124,9 +128,208 @@ class CustomerVehicleReportController extends Controller
 
             return Response([
                 'status'    => true,
-                'message'   => 'Vehicle Daily Report',
+                'message'   => 'Vehicle Daily Route',
                 'data'      => $data
             ], Response::HTTP_OK);
+        endif;
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/api/customer/daily-report",
+     *     summary="Vehicle Daily Report",
+     *     tags={"daily-report"},
+     *     description="Show Daily Vehicle Report.",
+     *     operationId="daily-report",
+     *     @OA\Parameter(
+     *         name="vehicle_id",
+     *         in="path",
+     *         description="Vehicle Id",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="date",
+     *         in="path",
+     *         description="Report Date",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="date"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid user supplied"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="User not found"
+     *     )
+     * )
+     */
+    public function dailyReport(Request $request): Response
+    {
+        $validator = validator(
+            $request->all(),
+            [
+                'vehicle_id'    => 'required|exists:vehicles,id',
+                'date'          => 'required|date_format:Y-m-d'
+            ],
+            [
+                'vehicle_id.required'   => 'Vehicle is Required',
+                'vehicle_id.exists'     => 'Provide Valid Vehicle Info',
+                'date.required'         => 'Report Date is Required',
+                'date.date_format'      => 'Provide Valid Date Format:YYYY-MM-DD'
+            ]
+        );
+
+        $vehicles = Vehicle::where('customer_id', Auth::user()->id)->pluck('id')->toArray();
+        $validator->after(function ($validator) use ($vehicles, $request) {
+            if (!in_array($request->vehicle_id, $vehicles)) :
+                $validator->errors()->add('vehicle_id', 'Provide Valid Vehicle Info');
+            endif;
+        });
+
+        if ($validator->fails()) :
+            return Response([
+                'status' => false,
+                'message' => $validator->getMessageBag()->first(),
+                'errors' => $validator->getMessageBag()
+            ], Response::HTTP_BAD_REQUEST);
+        else :
+            $dailyData = DeviceData::select('latitude', 'longitude', 'engine_status', 'speed', 'distance', 'fuel_use', 'created_at')->where('vehicle_id', $request->vehicle_id)
+                ->whereDate('created_at', $request->date)->get()->groupBy(function ($items) {
+                    return Carbon::parse($items->created_at)->format('H');
+                });
+            $result = [];
+            $total_distance = 0.000;
+            $total_fuel_use = 0.000;
+            foreach ($this->time_span as $span) :
+                $data = $dailyData->get($span);
+                $hourly_distance = 0.000;
+                $hourly_fuel_use = 0.000;
+                if (!is_null($data) > 0) :
+                    foreach ($data as $key => $value) :
+                        $hourly_distance += $value->distance;
+                        $hourly_fuel_use += $value->fuel_use;
+                    endforeach;
+
+                    $hourly_distance = (float) number_format($hourly_distance, 3, '.');
+                    $hourly_fuel_use = (float) number_format($hourly_fuel_use, 3, '.');
+                    $total_distance += $hourly_distance;
+                    $total_fuel_use += $hourly_fuel_use;
+
+                    array_push($result, array(
+                        'hourly_data'       => $data,
+                        'hourly_distance'   => $hourly_distance,
+                        'hourly_fuel_use'   => $hourly_fuel_use
+                    ));
+                else :
+                    array_push($result, array(
+                        'hourly_data'       => null,
+                        'hourly_distance'   => $hourly_distance,
+                        'hourly_fuel_use'   => $hourly_fuel_use,
+                    ));
+                endif;
+            endforeach;
+
+            return Response([
+                'status'    => true,
+                'message'   => 'Vehicle Daily Hourly Report',
+                'data'      => array(
+                    'time_span'         => $result,
+                    'total_distance'    => (string) $total_distance,
+                    'total_fuel_use'    => (string) $total_fuel_use
+                )
+            ], Response::HTTP_OK);
+
+        // dd(number_format($dailyData->sum('distance'), 3, '.'));
+        // dd($dailyData->keys()->toArray());
+        // $slot_differece = array_diff($this->time_span, $dailyData->keys()->toArray());
+        // array_merge($dailyData->keys());
+        // dd($dailyData->keys()->toArray(), $slot_differece);
+
+
+        // dd($)
+
+        // $dailyData->map(function ($dailyData, $key) use ($total_distance, $total_fuel_use) {
+        //     // dd($this->time_span[0]);
+        //     // if ($key == $this->time_span[0]) :
+        //     // dd('here');
+        //     $distance = (float) number_format($dailyData->sum('distance'), 3, '.');
+        //     $total_distance += $distance;
+        //     $fuel_use = (float) number_format($dailyData->sum('fuel_use'), 3, '.');
+        //     $total_fuel_use += $fuel_use;
+
+        //     $dailyData['hour_distance'] =  $distance;
+        //     $dailyData['hour_fuel_use'] = $fuel_use;
+
+        //     // else :
+        //     // dd($this->time_span[0]);
+        //     // $emptyData = array('name' => 'asbd');
+        //     // $dailyData->put($this->time_span[0], $emptyData);
+        //     // dd($dailyData);
+        //     // return $dailyData;
+
+        //     // endif;
+        //     // unset($this->time_span[0]);
+        //     // $this->time_span = array_values($this->time_span);
+        //     // dd($dailyData);
+        //     return $dailyData;
+        //     // array_merge($this->time_span);
+        //     // dd($this->time_span);
+        //     // dd($total_distance, $distance);
+
+        //     // $distance = $data->sum('distance');
+        //     // $fuel_use = $data->sum('fuel_use');
+        //     // dd($distance, $fuel_use);
+        // });
+
+        // $slot_differece = array_diff($this->time_span, $dailyData->keys()->toArray());
+        // if (count($slot_differece) > 0) :
+        //     $emptyData = array();
+        //     foreach ($slot_differece as $dif) :
+        //         $dailyData->put($dif, $emptyData);
+        //     endforeach;
+        // // array_merge($dailyData->keys()->toArray());
+        // // dd($dailyData->keys()->toArray());
+        // // $dailyData->merge($dailyData->keys());
+        // // array_merge($dailyData->keys()->toArray());
+        // endif;
+        // dd(array_merge($dailyData->toArray()));
+        // $rrr = $dailyData->sort();
+
+
+        // dd($dailyData->keys(), $this->time_span, $dif);
+        // dd($dailyData);
+        // $dailyData['total_distance'] = $dailyData->sum( function($dailyData ) {
+        //     return $distance;
+        // }'distance');
+        // $dailyData['total_fuel_use'] = $total_fuel_use;
+
+        // if (count($dailyData) > 0) {
+        //     dd($dailyData->get('00'));
+        //     // foreach ($dailyData as $key => $value) {
+        //     //     dd($key, $value);
+        //     // }
+        // }
+
+        // dd($dailyData->get($span)->sum('distance'));
+        // $dailyData->get($span)->map(function ($items) use ($hourly_distance, $hourly_fuel_use) {
+        //     $hourly_distance += $items->distance;
+        //     $hourly_fuel_use += $items->fuel_use;
+        //     // return $hourly_distance;
+        //     // dd($hourly_distance, $items->distance);
+        //     // $dis = (float) number_format($items->sum('distance'), 3, '.');
+        //     // dd($dis);
+        // });
+        // // $hourly_distance = $data->map(function ($items) {
+        // //     return (float) number_format($items->sum('distance'), 3, '.');
+        // // });
+        // // $distance = $data->get($span)->sum('distance');
+        // dd($hourly_distance);
         endif;
     }
 }
