@@ -71,6 +71,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('live-tracking', [CustomerVehicleReportController::class, 'liveTracking']);
         Route::post('daily-route', [CustomerVehicleReportController::class, 'dailyRoute']);
         Route::post('daily-report', [CustomerVehicleReportController::class, 'dailyReport']);
+        Route::post('monthly-report', [CustomerVehicleReportController::class, 'monthlyReport']);
     });
 });
 

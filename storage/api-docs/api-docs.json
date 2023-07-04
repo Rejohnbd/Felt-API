@@ -989,6 +989,44 @@
                 }
             }
         },
+        "/api/customer/monthly-report": {
+            "post": {
+                "tags": [
+                    "monthly-report"
+                ],
+                "summary": "Vehicle Monthly Report",
+                "description": "Show Monthly Vehicle Report.",
+                "operationId": "monthly-report",
+                "parameters": [
+                    {
+                        "name": "vehicle_id",
+                        "in": "path",
+                        "description": "Vehicle Id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "date",
+                        "in": "path",
+                        "description": "Report Date",
+                        "required": true,
+                        "schema": {
+                            "type": "date"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Invalid user supplied"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            }
+        },
         "/api/customer/customer-vehicles": {
             "get": {
                 "tags": [

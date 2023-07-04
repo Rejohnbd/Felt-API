@@ -332,4 +332,113 @@ class CustomerVehicleReportController extends Controller
         // dd($hourly_distance);
         endif;
     }
+
+    /**
+     * @OA\Post(
+     *     path="/api/customer/monthly-report",
+     *     summary="Vehicle Monthly Report",
+     *     tags={"monthly-report"},
+     *     description="Show Monthly Vehicle Report.",
+     *     operationId="monthly-report",
+     *     @OA\Parameter(
+     *         name="vehicle_id",
+     *         in="path",
+     *         description="Vehicle Id",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="date",
+     *         in="path",
+     *         description="Report Date",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="date"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid user supplied"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="User not found"
+     *     )
+     * )
+     */
+    public function monthlyReport(Request $request)
+    {
+        $validator = validator(
+            $request->all(),
+            [
+                'vehicle_id'    => 'required|exists:vehicles,id',
+                'date'          => 'required|date_format:Y-m-d'
+            ],
+            [
+                'vehicle_id.required'   => 'Vehicle is Required',
+                'vehicle_id.exists'     => 'Provide Valid Vehicle Info',
+                'date.required'         => 'Report Date is Required',
+                'date.date_format'      => 'Provide Valid Date Format:YYYY-MM-DD'
+            ]
+        );
+
+        $vehicles = Vehicle::where('customer_id', Auth::user()->id)->pluck('id')->toArray();
+        $validator->after(function ($validator) use ($vehicles, $request) {
+            if (!in_array($request->vehicle_id, $vehicles)) :
+                $validator->errors()->add('vehicle_id', 'Provide Valid Vehicle Info');
+            endif;
+        });
+
+        if ($validator->fails()) :
+            return Response([
+                'status' => false,
+                'message' => $validator->getMessageBag()->first(),
+                'errors' => $validator->getMessageBag()
+            ], Response::HTTP_BAD_REQUEST);
+        else :
+            $result = array();
+            $dailyData = null;
+            $monthly_distance = 0.000;
+            $monthly_fuel_use = 0.000;
+
+            $monthlyData = DeviceData::select('latitude', 'longitude', 'engine_status', 'speed', 'distance', 'fuel_use', 'created_at',)
+                ->where('vehicle_id', $request->vehicle_id)
+                ->whereYear('created_at', date("Y", strtotime($request->date)))
+                ->whereMonth('created_at', date("m", strtotime($request->date)))
+                ->get()
+                ->groupBy(function ($items) {
+                    return Carbon::parse($items->created_at)->format('Y-m-d');
+                });
+
+
+            if (count($monthlyData) > 0) :
+                foreach ($monthlyData as $key => $value) :
+                    $daily_distance = number_format($value->sum('distance'), 3, '.');
+                    $daily_fuel_use = number_format($value->sum('fuel_use'), 3, '.');
+                    $monthly_distance += $daily_distance;
+                    $monthly_fuel_use += $daily_fuel_use;
+                    $dailyData[$key] = array(
+                        'daily_data'        => $value,
+                        'daily_distance'    => $daily_distance,
+                        'daily_fuel_use'    => $daily_fuel_use
+                    );
+                endforeach;
+                $result['monthly_data']     = $dailyData;
+                $result['monthly_distance'] = (string) $monthly_distance;
+                $result['monthly_fuel_use'] = (string) $monthly_fuel_use;
+            else :
+                $result['monthly_data']     = $dailyData;
+                $result['monthly_distance'] = $monthly_distance;
+                $result['monthly_fuel_use'] = $monthly_fuel_use;
+            endif;
+
+            return Response([
+                'status'    => true,
+                'message'   => 'Vehicle Monthly Report',
+                'data'      => $result
+            ], Response::HTTP_OK);
+        endif;
+    }
 }
