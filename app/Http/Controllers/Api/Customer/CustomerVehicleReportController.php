@@ -441,4 +441,233 @@ class CustomerVehicleReportController extends Controller
             ], Response::HTTP_OK);
         endif;
     }
+
+    /**
+     * @OA\Post(
+     *     path="/api/customer/date-wise-distance-report",
+     *     summary="Vehicle Date Wise Distance Report",
+     *     tags={"date-wise-distance-report"},
+     *     description="Vehicle Date Wise Distance Report.",
+     *     operationId="date-wise-distance-report",
+     *     @OA\Parameter(
+     *         name="vehicle_id",
+     *         in="path",
+     *         description="Vehicle Id",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="start_date",
+     *         in="path",
+     *         description="Start Date",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="date"
+     *         )
+     *     ),
+     *      @OA\Parameter(
+     *         name="end_date",
+     *         in="path",
+     *         description="End Date",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="date"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid user supplied"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="User not found"
+     *     )
+     * )
+     */
+    public function dateWiseDistanceReport(Request $request)
+    {
+        $validator = validator(
+            $request->all(),
+            [
+                'vehicle_id'    => 'required|exists:vehicles,id',
+                'start_date'    => 'required|date_format:Y-m-d',
+                'end_date'      => 'required|date_format:Y-m-d|after:start_date'
+            ],
+            [
+                'vehicle_id.required'       => 'Vehicle is Required',
+                'vehicle_id.exists'         => 'Provide Valid Vehicle Info',
+                'start_date.required'       => 'Report Start Date is Required',
+                'start_date.date_format'    => 'Provide Valid Start Date Format:YYYY-MM-DD',
+                'end_date.required'         => 'Report End Date is Required',
+                'end_date.date_format'      => 'Provide Valid End Date Format:YYYY-MM-DD',
+                'end_date.after'            => 'Provide Valid Start and End Date'
+            ]
+        );
+
+        $vehicles = Vehicle::where('customer_id', Auth::user()->id)->pluck('id')->toArray();
+        $validator->after(function ($validator) use ($vehicles, $request) {
+            if (!in_array($request->vehicle_id, $vehicles)) :
+                $validator->errors()->add('vehicle_id', 'Provide Valid Vehicle Info');
+            endif;
+        });
+
+        if ($validator->fails()) :
+            return Response([
+                'status' => false,
+                'message' => $validator->getMessageBag()->first(),
+                'errors' => $validator->getMessageBag()
+            ], Response::HTTP_BAD_REQUEST);
+        else :
+            $result = array();
+            $dailyData = null;
+            $total_distance = 0.000;
+
+            $dateWiseData = DeviceData::select('latitude', 'longitude', 'engine_status', 'speed', 'distance', 'fuel_use', 'created_at',)
+                ->where('vehicle_id', $request->vehicle_id)
+                ->whereBetween('created_at', [$request->start_date, $request->end_date])
+                ->get()
+                ->groupBy(function ($items) {
+                    return Carbon::parse($items->created_at)->format('Y-m-d');
+                });
+
+            if (count($dateWiseData) > 0) :
+                foreach ($dateWiseData as $key => $value) :
+                    $daily_distance = number_format($value->sum('distance'), 3, '.');
+                    $total_distance += $daily_distance;
+
+                    $dailyData[$key] = array(
+                        'daily_data'        => $value,
+                        'daily_distance'    => $daily_distance,
+                    );
+                endforeach;
+                $result['date_wise_data']   = $dailyData;
+                $result['total_distance']   = (string) $total_distance;
+            else :
+                $result['date_wise_data']   = $dailyData;
+                $result['total_distance']   = $total_distance;
+            endif;
+
+            return Response([
+                'status'    => true,
+                'message'   => 'Vehicle Date Wise Distace Report',
+                'data'      => $result
+            ], Response::HTTP_OK);
+        endif;
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/api/customer/date-wise-fuel-report",
+     *     summary="Vehicle Date Wise Fuel Report",
+     *     tags={"date-wise-fuel-report"},
+     *     description="Vehicle Date Wise Fuel Report.",
+     *     operationId="date-wise-fuel-report",
+     *     @OA\Parameter(
+     *         name="vehicle_id",
+     *         in="path",
+     *         description="Vehicle Id",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="start_date",
+     *         in="path",
+     *         description="Start Date",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="date"
+     *         )
+     *     ),
+     *      @OA\Parameter(
+     *         name="end_date",
+     *         in="path",
+     *         description="End Date",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="date"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid user supplied"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="User not found"
+     *     )
+     * )
+     */
+    public function dateWiseFuelReport(Request $request)
+    {
+        $validator = validator(
+            $request->all(),
+            [
+                'vehicle_id'    => 'required|exists:vehicles,id',
+                'start_date'    => 'required|date_format:Y-m-d',
+                'end_date'      => 'required|date_format:Y-m-d|after:start_date'
+            ],
+            [
+                'vehicle_id.required'       => 'Vehicle is Required',
+                'vehicle_id.exists'         => 'Provide Valid Vehicle Info',
+                'start_date.required'       => 'Report Start Date is Required',
+                'start_date.date_format'    => 'Provide Valid Start Date Format:YYYY-MM-DD',
+                'end_date.required'         => 'Report End Date is Required',
+                'end_date.date_format'      => 'Provide Valid End Date Format:YYYY-MM-DD',
+                'end_date.after'            => 'Provide Valid Start and End Date'
+            ]
+        );
+
+        $vehicles = Vehicle::where('customer_id', Auth::user()->id)->pluck('id')->toArray();
+        $validator->after(function ($validator) use ($vehicles, $request) {
+            if (!in_array($request->vehicle_id, $vehicles)) :
+                $validator->errors()->add('vehicle_id', 'Provide Valid Vehicle Info');
+            endif;
+        });
+
+        if ($validator->fails()) :
+            return Response([
+                'status' => false,
+                'message' => $validator->getMessageBag()->first(),
+                'errors' => $validator->getMessageBag()
+            ], Response::HTTP_BAD_REQUEST);
+        else :
+            $result = array();
+            $dailyData = null;
+            $total_fuel_use = 0.000;
+
+            $dateWiseData = DeviceData::select('latitude', 'longitude', 'engine_status', 'speed', 'distance', 'fuel_use', 'created_at',)
+                ->where('vehicle_id', $request->vehicle_id)
+                ->whereBetween('created_at', [$request->start_date, $request->end_date])
+                ->get()
+                ->groupBy(function ($items) {
+                    return Carbon::parse($items->created_at)->format('Y-m-d');
+                });
+
+            if (count($dateWiseData) > 0) :
+                foreach ($dateWiseData as $key => $value) :
+                    $daily_fuel_use = number_format($value->sum('fuel_use'), 3, '.');
+                    $total_fuel_use += $daily_fuel_use;
+                    $dailyData[$key] = array(
+                        'daily_data'        => $value,
+                        'daily_fuel_use'    => $daily_fuel_use
+                    );
+                endforeach;
+                $result['date_wise_data']   = $dailyData;
+                $result['total_fuel_use']   = (string) $total_fuel_use;
+            else :
+                $result['date_wise_data']   = $dailyData;
+                $result['total_fuel_use'] = $total_fuel_use;
+            endif;
+
+            return Response([
+                'status'    => true,
+                'message'   => 'Vehicle Date Wise Fuel Report',
+                'data'      => $result
+            ], Response::HTTP_OK);
+        endif;
+    }
 }

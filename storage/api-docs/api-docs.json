@@ -1027,6 +1027,100 @@
                 }
             }
         },
+        "/api/customer/date-wise-distance-report": {
+            "post": {
+                "tags": [
+                    "date-wise-distance-report"
+                ],
+                "summary": "Vehicle Date Wise Distance Report",
+                "description": "Vehicle Date Wise Distance Report.",
+                "operationId": "date-wise-distance-report",
+                "parameters": [
+                    {
+                        "name": "vehicle_id",
+                        "in": "path",
+                        "description": "Vehicle Id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "start_date",
+                        "in": "path",
+                        "description": "Start Date",
+                        "required": true,
+                        "schema": {
+                            "type": "date"
+                        }
+                    },
+                    {
+                        "name": "end_date",
+                        "in": "path",
+                        "description": "End Date",
+                        "required": true,
+                        "schema": {
+                            "type": "date"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Invalid user supplied"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            }
+        },
+        "/api/customer/date-wise-fuel-report": {
+            "post": {
+                "tags": [
+                    "date-wise-fuel-report"
+                ],
+                "summary": "Vehicle Date Wise Fuel Report",
+                "description": "Vehicle Date Wise Fuel Report.",
+                "operationId": "date-wise-fuel-report",
+                "parameters": [
+                    {
+                        "name": "vehicle_id",
+                        "in": "path",
+                        "description": "Vehicle Id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "start_date",
+                        "in": "path",
+                        "description": "Start Date",
+                        "required": true,
+                        "schema": {
+                            "type": "date"
+                        }
+                    },
+                    {
+                        "name": "end_date",
+                        "in": "path",
+                        "description": "End Date",
+                        "required": true,
+                        "schema": {
+                            "type": "date"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Invalid user supplied"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            }
+        },
         "/api/customer/customer-vehicles": {
             "get": {
                 "tags": [

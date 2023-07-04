@@ -72,6 +72,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('daily-route', [CustomerVehicleReportController::class, 'dailyRoute']);
         Route::post('daily-report', [CustomerVehicleReportController::class, 'dailyReport']);
         Route::post('monthly-report', [CustomerVehicleReportController::class, 'monthlyReport']);
+        Route::post('date-wise-distance-report', [CustomerVehicleReportController::class, 'dateWiseDistanceReport']);
+        Route::post('date-wise-fuel-report', [CustomerVehicleReportController::class, 'dateWiseFuelReport']);
     });
 });
 
