@@ -90,4 +90,21 @@ class DeviceDataController extends Controller
         //echo ' '.$km; 
         return $km;
     }
+
+    public function getDeviceUserId(Request $request)
+    {
+        if ($request->header('api-secrect-key') == env('API_SECRET_KEY')) :
+            $deviceInfo = Device::with('vehicle:device_id,customer_id')->where('device_imei', $request->imei)->first();
+            return Response([
+                'status'    => true,
+                'userId'    => $deviceInfo->vehicle->customer_id,
+                'message'   => 'Device User Id',
+            ], Response::HTTP_BAD_REQUEST);
+        else :
+            return Response([
+                'status'    => false,
+                'message'   => 'Secrect Key Not Match',
+            ], Response::HTTP_BAD_REQUEST);
+        endif;
+    }
 }
