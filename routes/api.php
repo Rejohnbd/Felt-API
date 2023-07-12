@@ -77,6 +77,6 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 });
 
-Route::post('device-user', [DeviceDataController::class, 'getDeviceUserId']);
+// Route::post('device-user', [DeviceDataController::class, 'getDeviceUserId']);
 Route::post('device-data', [DeviceDataController::class, 'saveDeviceData']);
 Route::post('request-data', [TestController::class, 'requestData']);

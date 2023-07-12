@@ -15,6 +15,6 @@ class VerifyCsrfToken extends Middleware
         'login',
         'device-data',
         'request-data',
-        'device-user'
+        // 'device-user'
     ];
 }

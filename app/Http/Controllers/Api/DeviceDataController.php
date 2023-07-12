@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Device;
 use App\Models\DeviceData;
+use App\Models\Test;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
 
 class DeviceDataController extends Controller
 {
@@ -91,20 +93,25 @@ class DeviceDataController extends Controller
         return $km;
     }
 
-    public function getDeviceUserId(Request $request)
-    {
-        if ($request->header('api-secrect-key') == env('API_SECRET_KEY')) :
-            $deviceInfo = Device::with('vehicle:device_id,customer_id')->where('device_imei', $request->imei)->first();
-            return Response([
-                'status'    => true,
-                'userId'    => $deviceInfo->vehicle->customer_id,
-                'message'   => 'Device User Id',
-            ], Response::HTTP_BAD_REQUEST);
-        else :
-            return Response([
-                'status'    => false,
-                'message'   => 'Secrect Key Not Match',
-            ], Response::HTTP_BAD_REQUEST);
-        endif;
-    }
+    // public function getDeviceUserId(Request $request)
+    // {
+    //     $newTestData = new Test;
+    //     $newTestData->all_request = json_encode($request->all());
+    //     $newTestData->save();
+
+    //     // if ($request->header('api-secrect-key') == env('API_SECRET_KEY')) :
+    //     $deviceInfo = Device::with('vehicle:device_id,customer_id')->where('device_imei', $request->imei)->first();
+    //     Log::info("User Id " . $deviceInfo->vehicle->customer_id);
+    //     return Response([
+    //         'status'    => true,
+    //         'userId'    => $deviceInfo->vehicle->customer_id,
+    //         'message'   => 'Device User Id',
+    //     ], Response::HTTP_OK);
+    //     // else :
+    //     //     return Response([
+    //     //         'status'    => false,
+    //     //         'message'   => 'Secrect Key Not Match',
+    //     //     ], Response::HTTP_BAD_REQUEST);
+    //     // endif;
+    // }
 }
