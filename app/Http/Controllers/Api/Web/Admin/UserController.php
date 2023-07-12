@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Admin;
+namespace App\Http\Controllers\Api\Web\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -63,7 +63,7 @@ class UserController extends Controller
             [
                 'first_name'        => 'required',
                 'email'             => 'required|email:rfc,dns|max:255|unique:users,email',
-                'phone_number'      => 'required|min:11|max:11|unique:user_details,phone_number',
+                'phone_number'      => 'required|min:11|max:11|unique:users,phone_number',
                 'password'          => 'required|string|min:8',
                 'user_role'         => 'required|numeric|exists:user_roles,id',
                 'email_optional'    => 'nullable|email:rfc,dns|max:255',
@@ -117,6 +117,7 @@ class UserController extends Controller
                 $newUser->role_id       = $request->user_role;
                 $newUser->email         = $request->email;
                 $newUser->user_status   = $request->user_status;
+                $newUser->phone_number  = $request->phone_number;
                 $newUser->password      = Hash::make($request->password);
                 if ($request->user_role == 5) :
                     $newUser->created_by = $request->customer;
@@ -132,7 +133,6 @@ class UserController extends Controller
                 $newUserDetails->company_name   = $request->company_name;
                 $newUserDetails->designation    = $request->designation;
                 $newUserDetails->email_optional = $request->email_optional;
-                $newUserDetails->phone_number   = $request->phone_number;
                 $newUserDetails->phone_optional = $request->phone_optional;
                 $newUserDetails->address        = $request->address;
                 $newUserDetails->reference      = $request->reference;
