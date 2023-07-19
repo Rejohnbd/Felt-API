@@ -520,13 +520,15 @@ class CustomerVehicleReportController extends Controller
                 'errors' => $validator->getMessageBag()
             ], Response::HTTP_BAD_REQUEST);
         else :
+            $start_date = date("Y-m-d", strtotime('-1 day', strtotime($request->start_date)));
+            $end_date = date("Y-m-d", strtotime('+1 day', strtotime($request->end_date)));
             $result = array();
             $dailyData = null;
             $total_distance = 0.000;
 
             $dateWiseData = DeviceData::select('latitude', 'longitude', 'engine_status', 'speed', 'distance', 'fuel_use', 'created_at',)
                 ->where('vehicle_id', $request->vehicle_id)
-                ->whereBetween('created_at', [$request->start_date, $request->end_date])
+                ->whereBetween('created_at', [$start_date, $end_date])
                 ->get()
                 ->groupBy(function ($items) {
                     return Carbon::parse($items->created_at)->format('Y-m-d');
@@ -635,13 +637,15 @@ class CustomerVehicleReportController extends Controller
                 'errors' => $validator->getMessageBag()
             ], Response::HTTP_BAD_REQUEST);
         else :
+            $start_date = date("Y-m-d", strtotime('-1 day', strtotime($request->start_date)));
+            $end_date = date("Y-m-d", strtotime('+1 day', strtotime($request->end_date)));
             $result = array();
             $dailyData = null;
             $total_fuel_use = 0.000;
 
             $dateWiseData = DeviceData::select('latitude', 'longitude', 'engine_status', 'speed', 'distance', 'fuel_use', 'created_at',)
                 ->where('vehicle_id', $request->vehicle_id)
-                ->whereBetween('created_at', [$request->start_date, $request->end_date])
+                ->whereBetween('created_at', [$start_date, $end_date])
                 ->get()
                 ->groupBy(function ($items) {
                     return Carbon::parse($items->created_at)->format('Y-m-d');

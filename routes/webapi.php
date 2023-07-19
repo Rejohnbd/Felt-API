@@ -11,8 +11,6 @@ use App\Http\Controllers\Api\Web\Admin\UserRoleController;
 use App\Http\Controllers\Api\Web\Admin\VehicleController;
 use App\Http\Controllers\Api\Web\Admin\VehicleTypeController;
 
-
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
