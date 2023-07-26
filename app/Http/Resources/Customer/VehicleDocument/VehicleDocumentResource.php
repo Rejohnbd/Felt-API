@@ -19,7 +19,8 @@ class VehicleDocumentResource extends JsonResource
             'id'                        => $this->id,
             'registration_number'       => $this->registration_number,
             'registration_number'       => $this->registration_number,
-            'documents'                 => $this->documents
+            'documents'                 => $this->documents,
+            'vehicle_purpose'           => $this->vehicle_purpose
         ];
     }
 }
