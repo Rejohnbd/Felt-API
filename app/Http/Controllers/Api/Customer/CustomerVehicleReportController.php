@@ -199,7 +199,7 @@ class CustomerVehicleReportController extends Controller
                 'errors' => $validator->getMessageBag()
             ], Response::HTTP_BAD_REQUEST);
         else :
-            $dailyData = DeviceData::select('latitude', 'longitude', 'engine_status', 'speed', 'distance', 'fuel_use', 'created_at')->where('vehicle_id', $request->vehicle_id)
+            $dailyData = DeviceData::select('latitude', 'longitude', 'engine_status', 'rotation', 'speed', 'distance', 'fuel_use', 'created_at')->where('vehicle_id', $request->vehicle_id)
                 ->whereDate('created_at', $request->date)->get()->groupBy(function ($items) {
                     return Carbon::parse($items->created_at)->format('H');
                 });
@@ -403,7 +403,7 @@ class CustomerVehicleReportController extends Controller
             $monthly_distance = 0.000;
             $monthly_fuel_use = 0.000;
 
-            $monthlyData = DeviceData::select('latitude', 'longitude', 'engine_status', 'speed', 'distance', 'fuel_use', 'created_at',)
+            $monthlyData = DeviceData::select('latitude', 'longitude', 'engine_status', 'rotation', 'speed', 'distance', 'fuel_use', 'created_at',)
                 ->where('vehicle_id', $request->vehicle_id)
                 ->whereYear('created_at', date("Y", strtotime($request->date)))
                 ->whereMonth('created_at', date("m", strtotime($request->date)))
@@ -526,7 +526,7 @@ class CustomerVehicleReportController extends Controller
             $dailyData = null;
             $total_distance = 0.000;
 
-            $dateWiseData = DeviceData::select('latitude', 'longitude', 'engine_status', 'speed', 'distance', 'fuel_use', 'created_at',)
+            $dateWiseData = DeviceData::select('latitude', 'longitude', 'engine_status', 'rotation', 'speed', 'distance', 'fuel_use', 'created_at',)
                 ->where('vehicle_id', $request->vehicle_id)
                 ->whereBetween('created_at', [$start_date, $end_date])
                 ->get()
@@ -643,7 +643,7 @@ class CustomerVehicleReportController extends Controller
             $dailyData = null;
             $total_fuel_use = 0.000;
 
-            $dateWiseData = DeviceData::select('latitude', 'longitude', 'engine_status', 'speed', 'distance', 'fuel_use', 'created_at',)
+            $dateWiseData = DeviceData::select('latitude', 'longitude', 'engine_status', 'rotation', 'speed', 'distance', 'fuel_use', 'created_at',)
                 ->where('vehicle_id', $request->vehicle_id)
                 ->whereBetween('created_at', [$start_date, $end_date])
                 ->get()
