@@ -520,7 +520,7 @@ class CustomerVehicleReportController extends Controller
                 'errors' => $validator->getMessageBag()
             ], Response::HTTP_BAD_REQUEST);
         else :
-            $start_date = date("Y-m-d", strtotime('-1 day', strtotime($request->start_date)));
+            $start_date = $request->start_date;
             $end_date = date("Y-m-d", strtotime('+1 day', strtotime($request->end_date)));
             $result = array();
             $dailyData = null;
@@ -637,7 +637,7 @@ class CustomerVehicleReportController extends Controller
                 'errors' => $validator->getMessageBag()
             ], Response::HTTP_BAD_REQUEST);
         else :
-            $start_date = date("Y-m-d", strtotime('-1 day', strtotime($request->start_date)));
+            $start_date = $request->start_date;
             $end_date = date("Y-m-d", strtotime('+1 day', strtotime($request->end_date)));
             $result = array();
             $dailyData = null;
