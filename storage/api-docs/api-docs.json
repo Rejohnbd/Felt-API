@@ -13,210 +13,6 @@
         "version": "1.0.0"
     },
     "paths": {
-        "/api/admin/device-types": {
-            "get": {
-                "tags": [
-                    "getAllDeviceTypes"
-                ],
-                "summary": "Returns all device type",
-                "description": "",
-                "operationId": "getAllDeviceTypes",
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "additionalProperties": {
-                                        "type": "integer",
-                                        "format": "int32"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "Bearer token": []
-                    }
-                ]
-            },
-            "post": {
-                "tags": [
-                    "addDeviceType"
-                ],
-                "operationId": "addDeviceType",
-                "parameters": [
-                    {
-                        "name": "device_type_name",
-                        "in": "path",
-                        "description": "Device Type Name",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "device_configure_text",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "400": {
-                        "description": "Invalid input"
-                    }
-                }
-            }
-        },
-        "/api/admin/service-packages": {
-            "get": {
-                "tags": [
-                    "getAllPackages"
-                ],
-                "summary": "Returns all device type",
-                "description": "",
-                "operationId": "getAllPackages",
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "additionalProperties": {
-                                        "type": "integer",
-                                        "format": "int32"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "Bearer token": []
-                    }
-                ]
-            },
-            "post": {
-                "tags": [
-                    "createPackage"
-                ],
-                "operationId": "createPackage",
-                "parameters": [
-                    {
-                        "name": "package_name",
-                        "in": "path",
-                        "description": "Package Name",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "installation_charge",
-                        "in": "query",
-                        "description": "Installation Charge",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "subscription_fee",
-                        "in": "query",
-                        "description": "Subcription Fee",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "package_features",
-                        "in": "query",
-                        "description": "Package Features",
-                        "required": false,
-                        "schema": {
-                            "type": "array['value']"
-                        }
-                    }
-                ],
-                "responses": {
-                    "400": {
-                        "description": "Invalid input"
-                    }
-                },
-                "security": [
-                    {
-                        "Bearer token": []
-                    }
-                ]
-            }
-        },
-        "/api/admin/vehicle-types": {
-            "get": {
-                "tags": [
-                    "getAllVehicleTypes"
-                ],
-                "summary": "Returns all vehicle type",
-                "description": "",
-                "operationId": "getAllVehicleTypes",
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "additionalProperties": {
-                                        "type": "integer",
-                                        "format": "int32"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "Bearer token": []
-                    }
-                ]
-            },
-            "post": {
-                "tags": [
-                    "addVehicleTypes"
-                ],
-                "operationId": "addVehicleTypes",
-                "parameters": [
-                    {
-                        "name": "vehicle_type_name",
-                        "in": "path",
-                        "description": "Vehicle Type Name",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "vehicle_type_image",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "file"
-                        }
-                    }
-                ],
-                "responses": {
-                    "400": {
-                        "description": "Invalid input"
-                    }
-                }
-            }
-        },
         "/login": {
             "post": {
                 "tags": [
@@ -871,6 +667,43 @@
                     },
                     "404": {
                         "description": "User not found"
+                    }
+                }
+            }
+        },
+        "/vehicle-expenses/{expenseId}": {
+            "delete": {
+                "tags": [
+                    "vehicle-expenses-delete"
+                ],
+                "summary": "Deletes a expense",
+                "operationId": "deleteExpense",
+                "parameters": [
+                    {
+                        "name": "api_key",
+                        "in": "header",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "expenseId",
+                        "in": "path",
+                        "description": "Expense id to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Invalid ID supplied"
+                    },
+                    "404": {
+                        "description": "Pet not found"
                     }
                 }
             }
@@ -1639,6 +1472,210 @@
                         "Bearer token": []
                     }
                 ]
+            }
+        },
+        "/api/admin/device-types": {
+            "get": {
+                "tags": [
+                    "getAllDeviceTypes"
+                ],
+                "summary": "Returns all device type",
+                "description": "",
+                "operationId": "getAllDeviceTypes",
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": {
+                                        "type": "integer",
+                                        "format": "int32"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "addDeviceType"
+                ],
+                "operationId": "addDeviceType",
+                "parameters": [
+                    {
+                        "name": "device_type_name",
+                        "in": "path",
+                        "description": "Device Type Name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "device_configure_text",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Invalid input"
+                    }
+                }
+            }
+        },
+        "/api/admin/service-packages": {
+            "get": {
+                "tags": [
+                    "getAllPackages"
+                ],
+                "summary": "Returns all device type",
+                "description": "",
+                "operationId": "getAllPackages",
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": {
+                                        "type": "integer",
+                                        "format": "int32"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "createPackage"
+                ],
+                "operationId": "createPackage",
+                "parameters": [
+                    {
+                        "name": "package_name",
+                        "in": "path",
+                        "description": "Package Name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "installation_charge",
+                        "in": "query",
+                        "description": "Installation Charge",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "subscription_fee",
+                        "in": "query",
+                        "description": "Subcription Fee",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "package_features",
+                        "in": "query",
+                        "description": "Package Features",
+                        "required": false,
+                        "schema": {
+                            "type": "array['value']"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Invalid input"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer token": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/vehicle-types": {
+            "get": {
+                "tags": [
+                    "getAllVehicleTypes"
+                ],
+                "summary": "Returns all vehicle type",
+                "description": "",
+                "operationId": "getAllVehicleTypes",
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": {
+                                        "type": "integer",
+                                        "format": "int32"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "addVehicleTypes"
+                ],
+                "operationId": "addVehicleTypes",
+                "parameters": [
+                    {
+                        "name": "vehicle_type_name",
+                        "in": "path",
+                        "description": "Vehicle Type Name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "vehicle_type_image",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "file"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Invalid input"
+                    }
+                }
             }
         }
     }

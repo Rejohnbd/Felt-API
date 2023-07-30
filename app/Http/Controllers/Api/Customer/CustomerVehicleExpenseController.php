@@ -353,8 +353,56 @@ class CustomerVehicleExpenseController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id): RedirectResponse
+    /**
+     * @OA\Delete(
+     *     path="/vehicle-expenses/{expenseId}",
+     *     tags={"vehicle-expenses-delete"},
+     *     summary="Deletes a expense",
+     *     operationId="deleteExpense",
+     *     @OA\Parameter(
+     *         name="api_key",
+     *         in="header",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="expenseId",
+     *         in="path",
+     *         description="Expense id to delete",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int64"
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid ID supplied",
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Pet not found",
+     *     ),
+     * )
+     */
+    public function destroy(string $id): Response
     {
-        //
+        $expenseInfo =  VehicleExpense::where('id', $id)->where('customer_id', Auth::user()->id)->first();
+
+        if (!is_null($expenseInfo)) :
+            $expenseInfo->delete();
+            return Response([
+                'status'    => true,
+                'message'   => 'Expense Deleted Successfully',
+                'data'      => $expenseInfo
+            ], Response::HTTP_OK);
+        else :
+            return Response([
+                'status'    => false,
+                'message'   => 'Expense Not Deleted',
+            ], Response::HTTP_BAD_REQUEST);
+        endif;
     }
 }
