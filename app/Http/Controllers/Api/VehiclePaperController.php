@@ -20,6 +20,7 @@ class VehiclePaperController extends Controller
      *     summary="Returns all vehicle-papers",
      *     description="All vehicle papers. This is GET api common for both user Admin & Customer user",
      *     operationId="vehicle-papers",
+     *     security={{"sanctum": {} }},
      *     @OA\Response(
      *         response=200,
      *         description="successful operation",
@@ -30,9 +31,6 @@ class VehiclePaperController extends Controller
      *             )
      *         )
      *     ),
-     *     security={
-     *         {"Bearer token": {}}
-     *     }
      * )
      */
     public function index(): Response

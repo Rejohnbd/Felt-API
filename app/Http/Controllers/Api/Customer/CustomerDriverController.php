@@ -28,6 +28,7 @@ class CustomerDriverController extends Controller
      *     summary="Returns all customer driver",
      *     description="",
      *     operationId="customer-drivers",
+     *     security={{"sanctum": {} }},
      *     @OA\Response(
      *         response=200,
      *         description="successful operation",
@@ -38,9 +39,6 @@ class CustomerDriverController extends Controller
      *             )
      *         )
      *     ),
-     *     security={
-     *         {"Bearer token": {}}
-     *     }
      * )
      */
     public function index(): Response
@@ -300,6 +298,7 @@ class CustomerDriverController extends Controller
      *     summary="Get customer single driver ",
      *     description="",
      *     operationId="customer-driver-single",
+     *     security={{"sanctum": {} }},
      *     @OA\Response(
      *         response=200,
      *         description="successful operation",
@@ -310,9 +309,6 @@ class CustomerDriverController extends Controller
      *             )
      *         )
      *     ),
-     *     security={
-     *         {"Bearer token": {}}
-     *     }
      * )
      */
     public function show(string $id): Response

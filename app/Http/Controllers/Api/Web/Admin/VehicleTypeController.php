@@ -16,11 +16,12 @@ class VehicleTypeController extends Controller
      */
     /**
      * @OA\Get(
-     *     path="/api/admin/vehicle-types",
+     *     path="/api/web/admin/vehicle-types",
      *     tags={"getAllVehicleTypes"},
      *     summary="Returns all vehicle type",
      *     description="",
      *     operationId="getAllVehicleTypes",
+     *     security={{"sanctum": {} }},
      *     @OA\Response(
      *         response=200,
      *         description="successful operation",
@@ -31,9 +32,6 @@ class VehicleTypeController extends Controller
      *             )
      *         )
      *     ),
-     *     security={
-     *         {"Bearer token": {}}
-     *     }
      * )
      */
     public function index(): Response
@@ -59,7 +57,7 @@ class VehicleTypeController extends Controller
      */
     /**
      * @OA\Post(
-     *     path="/api/admin/vehicle-types",
+     *     path="/api/web/admin/vehicle-types",
      *     tags={"addVehicleTypes"},
      *     operationId="addVehicleTypes",
      *     @OA\Parameter(

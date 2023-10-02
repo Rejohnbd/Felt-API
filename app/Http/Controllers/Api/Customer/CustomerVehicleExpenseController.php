@@ -23,6 +23,7 @@ class CustomerVehicleExpenseController extends Controller
      *     summary="Returns Customer All Vehicle Expenses",
      *     description="Returns Customer All Vehicle Expenses",
      *     operationId="vehicle-expenses",
+     *     security={{"sanctum": {} }},
      *     @OA\Response(
      *         response=200,
      *         description="successful operation",
@@ -33,9 +34,6 @@ class CustomerVehicleExpenseController extends Controller
      *             )
      *         )
      *     ),
-     *     security={
-     *         {"Bearer token": {}}
-     *     }
      * )
      */
     public function index(): Response
@@ -194,6 +192,7 @@ class CustomerVehicleExpenseController extends Controller
      *     summary="Get Perticual Expesse",
      *     description="",
      *     operationId="vehicle-expenses-single",
+     *     security={{"sanctum": {} }},
      *     @OA\Response(
      *         response=200,
      *         description="successful operation",
@@ -204,9 +203,6 @@ class CustomerVehicleExpenseController extends Controller
      *             )
      *         )
      *     ),
-     *     security={
-     *         {"Bearer token": {}}
-     *     }
      * )
      */
     public function show(string $id): Response

@@ -16,11 +16,12 @@ class DeviceTypeController extends Controller
      */
     /**
      * @OA\Get(
-     *     path="/api/admin/device-types",
+     *     path="/api/web/admin/device-types",
      *     tags={"getAllDeviceTypes"},
      *     summary="Returns all device type",
      *     description="",
      *     operationId="getAllDeviceTypes",
+     *     security={{"sanctum": {} }},
      *     @OA\Response(
      *         response=200,
      *         description="successful operation",
@@ -31,9 +32,6 @@ class DeviceTypeController extends Controller
      *             )
      *         )
      *     ),
-     *     security={
-     *         {"Bearer token": {}}
-     *     }
      * )
      */
     public function index(): Response
@@ -55,7 +53,7 @@ class DeviceTypeController extends Controller
      */
     /**
      * @OA\Post(
-     *     path="/api/admin/device-types",
+     *     path="/api/web/admin/device-types",
      *     tags={"addDeviceType"},
      *     operationId="addDeviceType",
      *     @OA\Parameter(

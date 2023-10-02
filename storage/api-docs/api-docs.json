@@ -102,7 +102,7 @@
                 },
                 "security": [
                     {
-                        "Bearer token": []
+                        "sanctum": []
                     }
                 ]
             },
@@ -249,7 +249,7 @@
                 },
                 "security": [
                     {
-                        "Bearer token": []
+                        "sanctum": []
                     }
                 ]
             },
@@ -426,7 +426,7 @@
                 },
                 "security": [
                     {
-                        "Bearer token": []
+                        "sanctum": []
                     }
                 ]
             },
@@ -510,7 +510,7 @@
                 },
                 "security": [
                     {
-                        "Bearer token": []
+                        "sanctum": []
                     }
                 ]
             },
@@ -603,7 +603,7 @@
                 },
                 "security": [
                     {
-                        "Bearer token": []
+                        "sanctum": []
                     }
                 ]
             },
@@ -741,7 +741,7 @@
                 },
                 "security": [
                     {
-                        "Bearer token": []
+                        "sanctum": []
                     }
                 ]
             }
@@ -987,7 +987,7 @@
                 },
                 "security": [
                     {
-                        "Bearer token": []
+                        "sanctum": []
                     }
                 ]
             }
@@ -1017,7 +1017,7 @@
                 },
                 "security": [
                     {
-                        "Bearer token": []
+                        "sanctum": []
                     }
                 ]
             }
@@ -1192,7 +1192,7 @@
                 },
                 "security": [
                     {
-                        "Bearer token": []
+                        "sanctum": []
                     }
                 ]
             }
@@ -1308,7 +1308,7 @@
                 },
                 "security": [
                     {
-                        "Bearer token": []
+                        "sanctum": []
                     }
                 ]
             }
@@ -1333,7 +1333,7 @@
                 },
                 "security": [
                     {
-                        "Bearer token": []
+                        "sanctum": []
                     }
                 ]
             },
@@ -1469,12 +1469,12 @@
                 },
                 "security": [
                     {
-                        "Bearer token": []
+                        "sanctum": []
                     }
                 ]
             }
         },
-        "/api/admin/device-types": {
+        "/api/web/admin/device-types": {
             "get": {
                 "tags": [
                     "getAllDeviceTypes"
@@ -1499,7 +1499,7 @@
                 },
                 "security": [
                     {
-                        "Bearer token": []
+                        "sanctum": []
                     }
                 ]
             },
@@ -1534,7 +1534,7 @@
                 }
             }
         },
-        "/api/admin/service-packages": {
+        "/api/web/admin/service-packages": {
             "get": {
                 "tags": [
                     "getAllPackages"
@@ -1559,7 +1559,7 @@
                 },
                 "security": [
                     {
-                        "Bearer token": []
+                        "sanctum": []
                     }
                 ]
             },
@@ -1618,7 +1618,7 @@
                 ]
             }
         },
-        "/api/admin/vehicle-types": {
+        "/api/web/admin/vehicle-types": {
             "get": {
                 "tags": [
                     "getAllVehicleTypes"
@@ -1643,7 +1643,7 @@
                 },
                 "security": [
                     {
-                        "Bearer token": []
+                        "sanctum": []
                     }
                 ]
             },
@@ -1676,6 +1676,16 @@
                         "description": "Invalid input"
                     }
                 }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "sanctum": {
+                "type": "apiKey",
+                "description": "Enter token in format (Bearer <token>)",
+                "name": "Authorization",
+                "in": "header"
             }
         }
     }

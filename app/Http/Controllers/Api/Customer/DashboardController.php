@@ -28,6 +28,7 @@ class DashboardController extends Controller
      *     summary="Returns Customer Profile",
      *     description="Returns Customer Profile Information",
      *     operationId="getCustomerProfile",
+     *     security={{"sanctum": {} }},
      *     @OA\Response(
      *         response=200,
      *         description="successful operation",
@@ -35,9 +36,6 @@ class DashboardController extends Controller
      *             
      *         )
      *     ),
-     *     security={
-     *         {"Bearer token": {}}
-     *     }
      * )
      */
     public function getProfile()

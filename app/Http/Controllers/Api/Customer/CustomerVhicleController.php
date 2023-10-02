@@ -23,6 +23,7 @@ class CustomerVhicleController extends Controller
      *     summary="Returns all customer vehicle ",
      *     description="",
      *     operationId="customer-vehicles",
+     *     security={{"sanctum": {} }},
      *      @OA\Parameter(
      *         name="type",
      *         in="query",
@@ -39,9 +40,6 @@ class CustomerVhicleController extends Controller
      *             )
      *         )
      *     ),
-     *     security={
-     *         {"Bearer token": {}}
-     *     }
      * )
      */
     public function index(Request $request): Response
@@ -94,6 +92,7 @@ class CustomerVhicleController extends Controller
      *     summary="Get customer single vehicle ",
      *     description="",
      *     operationId="customer-single-vehicle",
+     *     security={{"sanctum": {} }},
      *     @OA\Response(
      *         response=200,
      *         description="successful operation",
@@ -104,9 +103,6 @@ class CustomerVhicleController extends Controller
      *             )
      *         )
      *     ),
-     *     security={
-     *         {"Bearer token": {}}
-     *     }
      * )
      */
     public function show(string $id): Response
@@ -407,6 +403,7 @@ class CustomerVhicleController extends Controller
      *     summary="Get Customer Vehicle Alert Info By Id",
      *     description="",
      *     operationId="customer-vehicles-alert-setting",
+     *     security={{"sanctum": {} }},
      *     @OA\Response(
      *         response=200,
      *         description="successful operation",
@@ -417,9 +414,6 @@ class CustomerVhicleController extends Controller
      *             )
      *         )
      *     ),
-     *     security={
-     *         {"Bearer token": {}}
-     *     }
      * )
      */
     public function vehicleAlertSetting(string $id): Response
@@ -603,6 +597,7 @@ class CustomerVhicleController extends Controller
      *     summary="Get Customer Vehicle Speed & Alert Info",
      *     description="",
      *     operationId="customer-vehicles-speed-alert-setting",
+     *     security={{"sanctum": {} }},
      *     @OA\Response(
      *         response=200,
      *         description="successful operation",
@@ -613,9 +608,6 @@ class CustomerVhicleController extends Controller
      *             )
      *         )
      *     ),
-     *     security={
-     *         {"Bearer token": {}}
-     *     }
      * )
      */
     public function vehicleSpeedSetting()

@@ -23,6 +23,7 @@ class CustomerVehicleReportController extends Controller
      *     summary="Returns all vehicle live tracking Info",
      *     description="",
      *     operationId="live-tracking",
+     *     security={{"sanctum": {} }},
      *      @OA\Parameter(
      *         name="type",
      *         in="query",
@@ -39,9 +40,6 @@ class CustomerVehicleReportController extends Controller
      *             )
      *         )
      *     ),
-     *     security={
-     *         {"Bearer token": {}}
-     *     }
      * )
      */
     public function liveTracking()

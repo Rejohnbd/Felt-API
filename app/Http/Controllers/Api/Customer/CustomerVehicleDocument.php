@@ -25,6 +25,7 @@ class CustomerVehicleDocument extends Controller
      *     summary="Returns all customer documents",
      *     description="return customer documents",
      *     operationId="get-vehicle-documents",
+     *     security={{"sanctum": {} }},
      *     @OA\Response(
      *         response=200,
      *         description="successful operation",
@@ -35,9 +36,6 @@ class CustomerVehicleDocument extends Controller
      *             )
      *         )
      *     ),
-     *     security={
-     *         {"Bearer token": {}}
-     *     }
      * )
      */
     public function index(): Response

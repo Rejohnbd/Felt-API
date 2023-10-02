@@ -16,11 +16,12 @@ class ServicePackageController extends Controller
      */
     /**
      * @OA\Get(
-     *     path="/api/admin/service-packages",
+     *     path="/api/web/admin/service-packages",
      *     tags={"getAllPackages"},
      *     summary="Returns all device type",
      *     description="",
      *     operationId="getAllPackages",
+     *     security={{"sanctum": {} }},
      *     @OA\Response(
      *         response=200,
      *         description="successful operation",
@@ -31,9 +32,6 @@ class ServicePackageController extends Controller
      *             )
      *         )
      *     ),
-     *     security={
-     *         {"Bearer token": {}}
-     *     }
      * )
      */
     public function index(): Response
@@ -59,7 +57,7 @@ class ServicePackageController extends Controller
      */
     /**
      * @OA\Post(
-     *     path="/api/admin/service-packages",
+     *     path="/api/web/admin/service-packages",
      *     tags={"createPackage"},
      *     operationId="createPackage",
      *     @OA\Parameter(
